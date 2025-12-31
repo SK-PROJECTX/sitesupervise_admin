@@ -39,8 +39,8 @@ const sidebarItems: SidebarItem[] = [
     label: "USER MANAGEMENT",
     children: [
       { label: "User Directory", href: "/admin/user-management" },
-      { label: "Role Management", href: "/admin/roles" },
-      { label: "Permission Sets", href: "/admin/permissions" },
+      { label: "Role Management", href: "/admin/user-management#" },
+      { label: "Permission Sets", href: "/admin/user-management#permissions" },
       { label: "User Analytics", href: "/admin/user-analytics" },
     ],
   },
@@ -58,7 +58,7 @@ const sidebarItems: SidebarItem[] = [
     icon: <Settings className="w-4 h-4" />,
     label: "SYSTEM SETTINGS",
     children: [
-      { label: "General Settings", href: "/admin/settings/general" },
+      { label: "General Settings", href: "/admin/settings/" },
       { label: "API & Integrations", href: "/admin/settings/integrations" },
       { label: "Security & Compliance", href: "/admin/settings/security" },
       { label: "Module Configuration", href: "/admin/settings/modules" },

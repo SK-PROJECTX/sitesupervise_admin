@@ -1,6 +1,6 @@
 export default function AdminAnalyticsPage() {
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen p-8">
       <div className="flex items-start justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#0A1B2E]">
           Platform Analytics & Reporting

@@ -12,7 +12,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-gray-100 p-8">
+    <div className="min-h-screen overflow-y-auto p-8">
       {/* Header */}
       <div className="flex justify-between items-start mb-8">
         <div>

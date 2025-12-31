@@ -38,7 +38,7 @@ export default function UserManagementPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen p-8">
       <div className="flex items-start justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#0A1B2E]">
           User Management Console
@@ -145,7 +145,7 @@ export default function UserManagementPage() {
         </div>
 
         {/* Bulk Actions Toolbar */}
-        <div>
+        <div id="permissions">
           <h2 className="text-lg font-bold text-[#0A1B2E] mb-4">
             BULK ACTIONS TOOLBAR
           </h2>

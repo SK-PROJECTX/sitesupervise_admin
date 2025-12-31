@@ -1,7 +1,10 @@
+"use client"
 import { useState } from "react";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-lg font-bold text-[#0A1B2E] mb-4">{children}</h2>;
+  return (
+    <h2 className="text-lg font-bold text-[#0A1B2E] mb-4">{children}</h2>
+  );
 }
 
 export default function AdminSettingsIndex() {
@@ -20,7 +23,7 @@ export default function AdminSettingsIndex() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen p-8">
       <div className="flex items-start justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#0A1B2E]">
           Platform Configuration
@@ -60,6 +63,7 @@ export default function AdminSettingsIndex() {
               Network
             </button>
           </div>
+          general
         </div>
 
         <div id="general" className="bg-white rounded-2xl p-8 shadow-sm">
@@ -67,7 +71,7 @@ export default function AdminSettingsIndex() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <fieldset className="space-y-4">
-                <legend className="text-sm font-semibold">
+                <legend className="text-sm text-gray-800 font-semibold">
                   Company Information
                 </legend>
                 <div className="flex items-center gap-4">
@@ -94,7 +98,7 @@ export default function AdminSettingsIndex() {
                   <input
                     value={supportEmail}
                     onChange={(e) => setSupportEmail(e.target.value)}
-                    className="border rounded px-3 py-2 w-full md:w-80 text-sm"
+                    className="border border-black text-black rounded px-3 py-2 w-full md:w-80 text-sm"
                   />
                 </div>
                 <div className="flex items-center gap-4">
@@ -102,7 +106,7 @@ export default function AdminSettingsIndex() {
                   <select
                     value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}
-                    className="border rounded px-3 py-2 w-full md:w-80 text-sm"
+                    className="border border-black text-black rounded px-3 py-2 w-full md:w-80 text-sm"
                   >
                     <option>UTC-06:00 Eastern Time</option>
                     <option>UTC+00:00 UTC</option>
@@ -116,20 +120,20 @@ export default function AdminSettingsIndex() {
                   <input
                     value={dateFormat}
                     onChange={(e) => setDateFormat(e.target.value)}
-                    className="border rounded px-3 py-2 w-full md:w-80 text-sm"
+                    className="border border-black text-black rounded px-3 py-2 w-full md:w-80 text-sm"
                   />
                 </div>
               </fieldset>
 
               <fieldset className="mt-6 space-y-4">
-                <legend className="text-sm font-semibold">
+                <legend className="text-sm text-gray-800 font-semibold">
                   Performance Setting
                 </legend>
                 <div className="flex items-center gap-4">
                   <label className="w-40 text-sm text-gray-700">
                     AR processing priority
                   </label>
-                  <div className="px-3 py-1 border rounded text-sm">
+                  <div className="px-3 py-1 border border-black text-black rounded text-sm">
                     Balanced
                   </div>
                 </div>
@@ -137,14 +141,14 @@ export default function AdminSettingsIndex() {
                   <label className="w-40 text-sm text-gray-700">
                     AI model refresh
                   </label>
-                  <div className="px-3 py-1 border rounded text-sm">Daily</div>
+                  <div className="px-3 py-1 border border-black text-black rounded text-sm">Daily</div>
                 </div>
               </fieldset>
             </div>
 
             <div>
               <fieldset className="space-y-4">
-                <legend className="text-sm font-semibold">
+                <legend className="text-sm text-gray-800 font-semibold">
                   Storage Settings
                 </legend>
                 <div className="flex items-center gap-4">
@@ -152,7 +156,7 @@ export default function AdminSettingsIndex() {
                     Max project size
                   </label>
                   <input
-                    className="border rounded px-3 py-2 w-full text-sm"
+                    className="border border-black text-black rounded px-3 py-2 w-full text-sm"
                     defaultValue="500GB"
                   />
                 </div>
@@ -161,7 +165,7 @@ export default function AdminSettingsIndex() {
                     Max file size
                   </label>
                   <input
-                    className="border rounded px-3 py-2 w-full text-sm"
+                    className="border border-black text-black rounded px-3 py-2 w-full text-sm"
                     defaultValue="250MB"
                   />
                 </div>
@@ -169,7 +173,7 @@ export default function AdminSettingsIndex() {
                   <label className="w-48 text-sm text-gray-700">
                     Retention policy
                   </label>
-                  <div className="px-3 py-1 border rounded text-sm">
+                  <div className="px-3 py-1 border border-black text-black rounded text-sm">
                     Active 7 years, archived 3 years
                   </div>
                 </div>
@@ -177,17 +181,17 @@ export default function AdminSettingsIndex() {
                   <label className="w-48 text-sm text-gray-700">
                     Auto-cleanup
                   </label>
-                  <div className="px-3 py-1 border rounded text-sm">
+                  <div className="px-3 py-1 border border-black text-black rounded text-sm">
                     Enabled
                   </div>
                 </div>
               </fieldset>
 
               <fieldset className="mt-6 space-y-4">
-                <legend className="text-sm font-semibold">
+                <legend className="text-sm text-gray-800 font-semibold">
                   Module Configuration
                 </legend>
-                <div className="border rounded p-4 text-sm text-gray-700">
+                <div className="border border-black text-black rounded p-4 text-sm text-gray-700">
                   <table className="w-full text-left text-sm">
                     <thead>
                       <tr>
@@ -291,16 +295,16 @@ export default function AdminSettingsIndex() {
             <div>
               <p className="text-sm font-medium mb-2">Add New Integration</p>
               <div className="flex gap-3 flex-wrap">
-                <select className="border rounded px-3 py-2 text-sm">
+                <select className="border border-black text-black rounded px-3 py-2 text-sm">
                   <option>Select: Weather</option>
                 </select>
-                <select className="border rounded px-3 py-2 text-sm">
+                <select className="border border-black text-black rounded px-3 py-2 text-sm">
                   <option>BIM</option>
                 </select>
-                <select className="border rounded px-3 py-2 text-sm">
+                <select className="border border-black text-black rounded px-3 py-2 text-sm">
                   <option>Accounting</option>
                 </select>
-                <button className="px-3 py-2 border rounded text-sm">
+                <button className="px-3 py-2 border border-black text-black rounded text-sm">
                   Custom API
                 </button>
               </div>
@@ -315,7 +319,7 @@ export default function AdminSettingsIndex() {
           <button className="px-6 py-3 bg-blue-600 text-white rounded">
             Revert to Defaults
           </button>
-          <button className="px-6 py-3 border rounded">
+          <button className="px-6 py-3 border border-black text-black rounded">
             Export Configuration
           </button>
         </div>
