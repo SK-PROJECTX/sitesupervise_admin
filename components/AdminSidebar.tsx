@@ -70,13 +70,13 @@ const sidebarItems: SidebarItem[] = [
     icon: <BarChart3 className="w-5 h-5" />,
     label: "ANALYTICS & REPORTS",
     children: [
-      { label: "Platform Usage", href: "/admin/analytics/platform-usage" },
-      { label: "Billing & Revenue", href: "/admin/analytics/billing-revenue" },
+      { label: "Platform Usage", href: "/admin/analytics/#platform-usage" },
+      { label: "Billing & Revenue", href: "/admin/analytics/#billing-revenue" },
       {
         label: "Performance Metrics",
-        href: "/admin/analytics/performance-metrics",
+        href: "/admin/analytics/#performance-metrics",
       },
-      { label: "Custom Reports", href: "/admin/analytics/custom-reports" },
+      { label: "Custom Reports", href: "/admin/analytics/#custom-reports" },
     ],
   },
   {
