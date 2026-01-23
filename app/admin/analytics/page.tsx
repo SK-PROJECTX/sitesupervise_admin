@@ -36,8 +36,12 @@ export default function AdminAnalyticsPage() {
                       +2.4%
                     </div>
                   </div>
-                  <button className="text-gray-400 hover:text-gray-300 ml-2 flex-shrink-0">
-                    <ArrowUpRight size={18} strokeWidth={2} />
+                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
+                    <ArrowUpRight
+                      size={18}
+                      strokeWidth={2}
+                      className="text-gray-600"
+                    />
                   </button>
                 </div>
               </div>
@@ -54,8 +58,12 @@ export default function AdminAnalyticsPage() {
                       +1.1%
                     </div>
                   </div>
-                  <button className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0">
-                    <ArrowUpRight size={18} strokeWidth={2} />
+                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
+                    <ArrowUpRight
+                      size={18}
+                      strokeWidth={2}
+                      className="text-gray-600"
+                    />
                   </button>
                 </div>
               </div>
@@ -74,8 +82,12 @@ export default function AdminAnalyticsPage() {
                       Strong
                     </div>
                   </div>
-                  <button className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0">
-                    <ArrowUpRight size={18} strokeWidth={2} />
+                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
+                    <ArrowUpRight
+                      size={18}
+                      strokeWidth={2}
+                      className="text-gray-600"
+                    />
                   </button>
                 </div>
               </div>
@@ -94,8 +106,12 @@ export default function AdminAnalyticsPage() {
                       High
                     </div>
                   </div>
-                  <button className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0">
-                    <ArrowUpRight size={18} strokeWidth={2} />
+                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
+                    <ArrowUpRight
+                      size={18}
+                      strokeWidth={2}
+                      className="text-gray-600"
+                    />
                   </button>
                 </div>
               </div>

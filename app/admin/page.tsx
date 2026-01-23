@@ -129,87 +129,90 @@ export default function AdminDashboardPage() {
           <section id="platform-metrics">
             <div className="grid md:grid-cols-2 gap-3 mb-28 ">
               {/* Key Platform Metrics */}
-            <div className="rounded-lg col-span-1">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                KEY PLATFORM METRICS
-              </h2>
+              <div className="rounded-lg col-span-1">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                  KEY PLATFORM METRICS
+                </h2>
 
-              <div className="grid grid-cols-2 gap-4 mb-6 h-full">
-                {statsCards.map((card) => (
-                  <div
-                    key={card.title}
-                    className={`
+                <div className="grid grid-cols-2 gap-4 mb-6 h-full">
+                  {statsCards.map((card) => (
+                    <div
+                      key={card.title}
+                      className={`
                         ${card.cardClass}
                         ${card.border}
                         ${cornerClassMap[card.corner]}
                         p-6 relative overflow-hidden flex flex-col justify-between
                       `}
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <span
-                        className={`text-sm ${
-                          card.cardClass.includes("bg-gray-900")
-                            ? "text-gray-400"
-                            : "text-gray-600"
-                        }`}
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <span
+                          className={`text-sm ${
+                            card.cardClass.includes("bg-gray-900")
+                              ? "text-gray-400"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {card.title}
+                        </span>
+
+                        <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300">
+                          <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                        </button>
+                      </div>
+
+                      <div
+                        className={`text-5xl font-bold mb-2 ${card.textClass}`}
                       >
-                        {card.title}
-                      </span>
-
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <ArrowUpRight className="w-8 h-8" />
-                      </button>
-                    </div>
-
-                    <div
-                      className={`text-5xl font-bold mb-2 ${card.textClass}`}
-                    >
-                      {card.value}
-                    </div>
-
-                    <div
-                      className={`inline-block ${card.badgeClass} text-white text-xs px-2 py-1 rounded-4xlKEY PLATFORM METRICS mt-4 w-18 text-center`}
-                    >
-                      {card.badge}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* System Health Dashboard */}
-            <div className="rounded-lg col-span-1 h-full">
-              <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                REAL-TIME SYSTEM MONITOR
-              </h3>
-              <div className="bg-white px-6 py-8 rounded-2xl shadow-sm h-full">
-                <h4 className="text-lg font-bold text-gray-900 mb-6">
-                  SYSTEM HEALTH DASHBOARD
-                </h4>
-                <div className="space-y-6">
-                  {systemMetrics.map((metric) => (
-                    <div key={metric.label} className="flex items-center gap-4">
-                      <div className="w-44 text-sm text-gray-600">
-                        {metric.label}
+                        {card.value}
                       </div>
 
-                      <div className="flex-1">
-                        <div className="w-full h-8 md:h-10 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full ${metric.barClass} rounded-full`}
-                            style={{ width: `${metric.progress}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="w-16 text-right text-sm text-gray-900">
-                        {metric.value}
+                      <div
+                        className={`inline-block ${card.badgeClass} text-white text-xs px-2 py-1 rounded-4xlKEY PLATFORM METRICS mt-4 w-18 text-center`}
+                      >
+                        {card.badge}
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+
+              {/* System Health Dashboard */}
+              <div className="rounded-lg col-span-1 h-full">
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">
+                  REAL-TIME SYSTEM MONITOR
+                </h3>
+                <div className="bg-white px-6 py-8 rounded-2xl shadow-sm h-full">
+                  <h4 className="text-lg font-bold text-gray-900 mb-6">
+                    SYSTEM HEALTH DASHBOARD
+                  </h4>
+                  <div className="space-y-6">
+                    {systemMetrics.map((metric) => (
+                      <div
+                        key={metric.label}
+                        className="flex items-center gap-4"
+                      >
+                        <div className="w-44 text-sm text-gray-600">
+                          {metric.label}
+                        </div>
+
+                        <div className="flex-1">
+                          <div className="w-full h-8 md:h-10 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full ${metric.barClass} rounded-full`}
+                              style={{ width: `${metric.progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="w-16 text-right text-sm text-gray-900">
+                          {metric.value}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -377,7 +380,7 @@ export default function AdminDashboardPage() {
             </div>
           </section>
         </div>
-        
+
         {/* ALERTS & NOTIFICATION CENTER SECTION */}
         <section id="alerts-center">
           <div className="space-y-6">

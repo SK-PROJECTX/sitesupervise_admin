@@ -135,21 +135,8 @@ export default function BillingPage() {
                   >
                     {card.title}
                   </span>
-                  <button
-                    className={`p-2 rounded-full ${
-                      card.cardClass.includes("bg-slate-900")
-                        ? "bg-gray-800 hover:bg-gray-700"
-                        : "bg-gray-200 hover:bg-gray-300"
-                    }`}
-                  >
-                    <ArrowUpRight
-                      size={18}
-                      className={
-                        card.cardClass.includes("bg-slate-900")
-                          ? "text-gray-500"
-                          : "text-gray-600"
-                      }
-                    />
+                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300">
+                    <ArrowUpRight size={18} className="text-gray-600" />
                   </button>
                 </div>
 
@@ -231,13 +218,12 @@ export default function BillingPage() {
 
         {/* Subscription Plans Section */}
         <section id="subscription-plans" className="mb-12">
-            <div className="flex items-center gap-2 mb-8">
-              <h2 className="text-2xl font-bold text-slate-900 uppercase tracking-wide">
-                SUBSCRIPTION PLANS
-              </h2>
-            </div>
+          <div className="flex items-center gap-2 mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 uppercase tracking-wide">
+              SUBSCRIPTION PLANS
+            </h2>
+          </div>
           <div className="bg-white rounded-3xl shadow-sm border border-gray-200 p-8">
-
             {/* Basic Plan */}
             <div className="mb-8">
               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">
@@ -421,8 +407,6 @@ export default function BillingPage() {
             </div>
           </div>
         </section>
-
-        
       </div>
     </main>
   );
