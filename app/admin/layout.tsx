@@ -8,7 +8,7 @@ export default function AdminDashboardLayout({
   return (
     <div className="flex h-screen ">
       <AdminSidebar />
-      <main className="flex-1 bg-adminBg/50 p-6 overflow-y-scroll">
+      <main className="flex-1 bg-adminBg/50 overflow-y-scroll">
         {children}
       </main>
     </div>

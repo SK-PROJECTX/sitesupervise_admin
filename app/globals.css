@@ -2,8 +2,8 @@
 
 @theme default {
 
-  --primary: #006EC4;
-  --secondary: #001220;
+  --color-primary: #006EC4;
+  --color-secondary: #001220;
   --color-adminBg: #D9D9D9;
 }
 

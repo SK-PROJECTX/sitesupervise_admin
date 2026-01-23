@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {

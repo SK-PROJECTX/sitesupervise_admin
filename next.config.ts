@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // MAKE TO REDIRECT FROM "/" TO "/admin"
+  // rewrites: async () => ({
+  //   beforeFiles: [
+  //     {
+  //       source: "/",
+  //       destination: "/admin",
+  //     },
+  //   ],
+  // }),
 };
 
 export default nextConfig;
