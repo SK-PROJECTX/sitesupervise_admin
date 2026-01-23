@@ -79,7 +79,7 @@ const sidebarItems: SidebarItem[] = [
     label: "ANALYTICS & REPORTS",
     children: [
       { label: "Platform Usage", href: "/admin/analytics/#platform-usage" },
-      { label: "Billing & Revenue", href: "/admin/analytics/#billing-revenue" },
+      { label: "Billing & Revenue", href: "/admin/billing" },
       {
         label: "Performance Metrics",
         href: "/admin/analytics/#performance-metrics",
