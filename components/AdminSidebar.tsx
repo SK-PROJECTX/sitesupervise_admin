@@ -24,6 +24,7 @@ interface SidebarChild {
 
 interface SidebarItem {
   icon: React.ReactNode;
+  href?: string;
   label: string;
   children?: SidebarChild[];
 }
@@ -32,6 +33,7 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: <Home className="w-5 h-5" />,
     label: "DASHBOARD (Home)",
+    href: "/admin",
   },
   {
     icon: <Users className="w-5 h-5" />,
@@ -47,10 +49,16 @@ const sidebarItems: SidebarItem[] = [
     icon: <FolderOpen className="w-5 h-5" />,
     label: "PROJECT MANAGEMENT",
     children: [
-      { label: "Project Analytics", href: "/admin/project-management/#analytics" },
+      {
+        label: "Project Analytics",
+        href: "/admin/project-management/#analytics",
+      },
       { label: "Active Directory", href: "/admin/project-management/#active" },
       { label: "Project Archive", href: "/admin/project-management/#archive" },
-      { label: "Project Templates", href: "/admin/project-management/#templates" },
+      {
+        label: "Project Templates",
+        href: "/admin/project-management/#templates",
+      },
     ],
   },
   {
@@ -118,14 +126,14 @@ export default function AdminSidebar() {
     setExpandedItems((prev) =>
       prev.includes(label)
         ? prev.filter((item) => item !== label)
-        : [...prev, label]
+        : [...prev, label],
     );
   };
 
   const isParentActive = (item: SidebarItem) => {
     if (!item.children) return pathname === "/admin" || pathname === "/";
     return item.children.some(
-      (c) => pathname === c.href || pathname.startsWith(c.href + "/")
+      (c) => pathname === c.href || pathname.startsWith(c.href + "/"),
     );
   };
 
@@ -135,11 +143,11 @@ export default function AdminSidebar() {
       <div className="p-4 border-b border-gray-700">
         <div className="flex items-center gap-3">
           {/* Placeholder for logo - replace src with actual logo path */}
-       <img
-        src="/favicon.ico"
-        alt="Site Supervise"
-        className="w-8 h-8 mr-4"
-        />
+          <img
+            src="/favicon.ico"
+            alt="Site Supervise"
+            className="w-8 h-8 mr-4"
+          />
 
           <div>
             <div className="font-bold text-lg">SITE SUPERVISE</div>
@@ -164,7 +172,13 @@ export default function AdminSidebar() {
               >
                 <div className="flex items-center gap-3">
                   {item.icon}
-                  <span>{item.label}</span>
+                  {item.href ? (
+                    <Link href={item.href}>
+                      <span>{item.label}</span>
+                    </Link>
+                  ) : (
+                    <span>{item.label}</span>
+                  )}
                 </div>
                 {item.children && (
                   <>

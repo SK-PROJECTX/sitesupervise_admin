@@ -1,3 +1,5 @@
+import { ArrowUpRight, Calendar } from "lucide-react";
+
 export default function AdminAnalyticsPage() {
   return (
     <main className="min-h-screen p-8">
@@ -6,110 +8,175 @@ export default function AdminAnalyticsPage() {
           Platform Analytics & Reporting
         </h1>
         <div>
-          <button className="px-4 py-2 border border-gray-300 bg-white rounded text-sm">
+          <button className="px-4 py-2 border border-gray-300 bg-white rounded text-sm flex items-center gap-2 hover:bg-gray-50">
+            <Calendar size={16} />
             Date Range: This Month
           </button>
         </div>
       </div>
 
-      <section className="space-y-8">
-        {/* Top stats + chart row */}
+      <div className="space-y-8">
+        {/* Top stats row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 grid grid-cols-2  gap-4">
-            <div className="bg-[#0A1B2E] rounded-xl p-4 shadow-sm">
-              <div className="text-xs text-gray-500">MAU (Monthly)</div>
-              <div className="text-3xl font-bold text-white mt-2">
-                1,842
+          {/* Left: 2x2 grid of metrics */}
+          <div className="lg:col-span-2">
+            <h2 className="text-sm font-bold text-[#0A1B2E] uppercase tracking-wide mb-4">
+              KEY METRICS OVERVIEW
+            </h2>
+            <div className="grid grid-cols-2 gap-4">
+              {/* MAU Card */}
+              <div className="bg-[#0A1B2E] rounded-tl-3xl p-6 shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="text-xs text-gray-400 mb-2">
+                      MAU (Monthly)
+                    </div>
+                    <div className="text-4xl font-bold text-white">1,842</div>
+                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                      +2.4%
+                    </div>
+                  </div>
+                  <button className="text-gray-400 hover:text-gray-300 ml-2 flex-shrink-0">
+                    <ArrowUpRight size={18} strokeWidth={2} />
+                  </button>
+                </div>
               </div>
-              <div className="mt-3 inline-block bg-green-500 text-white text-xs px-2 py-1 rounded">
-                +2.4%
-              </div>
-            </div>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <div className="text-xs text-gray-500">DAU (Daily)</div>
-              <div className="text-3xl font-bold text-[#0A1B2E] mt-2">847</div>
-              <div className="mt-3 inline-block bg-green-500 text-white text-xs px-2 py-1 rounded">
-                +1.1%
+              {/* DAU Card */}
+              <div className="bg-white rounded-tr-3xl p-6 shadow-sm border border-gray-200">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="text-xs text-gray-600 mb-2">
+                      DAU (Daily)
+                    </div>
+                    <div className="text-4xl font-bold text-[#0A1B2E]">847</div>
+                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                      +1.1%
+                    </div>
+                  </div>
+                  <button className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0">
+                    <ArrowUpRight size={18} strokeWidth={2} />
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <div className="text-xs text-gray-500">Growth Health</div>
-              <div className="text-2xl font-bold text-[#0A1B2E] mt-2">
-                12.4%
+              {/* Growth Health Card */}
+              <div className="bg-white rounded-bl-3xl p-6 shadow-sm border border-gray-200">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="text-xs text-gray-600 mb-2">
+                      Growth Health
+                    </div>
+                    <div className="text-4xl font-bold text-[#0A1B2E]">
+                      12.4%
+                    </div>
+                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                      Strong
+                    </div>
+                  </div>
+                  <button className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0">
+                    <ArrowUpRight size={18} strokeWidth={2} />
+                  </button>
+                </div>
               </div>
-              <div className="mt-3 inline-block bg-green-500 text-white text-xs px-2 py-1 rounded">
-                Strong
-              </div>
-            </div>
 
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <div className="text-xs text-gray-500">Engagement Score</div>
-              <div className="text-2xl font-bold text-[#0A1B2E] mt-2">
-                8.7/10
-              </div>
-              <div className="mt-3 inline-block bg-green-500 text-white text-xs px-2 py-1 rounded">
-                High
+              {/* Engagement Score Card */}
+              <div className="bg-white rounded-br-3xl p-6 shadow-sm border border-gray-200">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="text-xs text-gray-600 mb-2">
+                      Engagement Score
+                    </div>
+                    <div className="text-4xl font-bold text-[#0A1B2E]">
+                      8.7/10
+                    </div>
+                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                      High
+                    </div>
+                  </div>
+                  <button className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0">
+                    <ArrowUpRight size={18} strokeWidth={2} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <div className="text-xs text-gray-500 mb-2">
-              Daily Active Users (30-day trend)
+          {/* Right: Chart */}
+          <div>
+            <h2 className="text-sm font-bold text-[#0A1B2E] uppercase tracking-wide mb-4">
+              USAGE ANALYTICS CHARTS
+            </h2>
+
+            <div className="bg-white  rounded-3xl p-6 shadow-sm border border-gray-200">
+              <div className="text-xs text-gray-600 mb-3">
+                DAILY ACTIVE USERS (30-day trend)
+              </div>
+              <div className="h-48 bg-gray-50 rounded-lg"></div>
             </div>
-            <div className="h-36 bg-gray-50 rounded"></div>
           </div>
         </div>
 
-        {/* Middle charts row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-sm lg:col-span-2">
-            <div className="text-sm text-gray-500 mb-4">
-              MODULE USAGE DISTRIBUTION
+        {/* Usage Analytics Charts row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left column - two stacked charts */}
+          <div className="space-y-4">
+            {/* Module Usage Distribution */}
+            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
+              <div className="text-sm font-semibold text-[#0A1B2E] mb-4">
+                MODULE USAGE DISTRIBUTION
+              </div>
+              <div className="h-48 bg-gray-50 rounded-lg"></div>
             </div>
-            <div className="h-44 bg-gray-50 rounded"></div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="text-sm text-gray-500 mb-4">
+          {/* Right: Daily Active Users Chart */}
+          {/* Device & Platform Usage */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
+            <div className="text-sm font-semibold text-[#0A1B2E] mb-6">
               DEVICE & PLATFORM USAGE
             </div>
-            <div className="space-y-3">
+            <div className="space-y-5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    M
-                  </div>
-                  <div className="text-sm text-gray-700">Mobile</div>
+                <div className="text-sm text-gray-700 font-medium">Mobile:</div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-blue-500 bg-white relative">
+                  <span className="text-xs font-bold text-blue-600">64%</span>
                 </div>
-                <div className="text-sm text-gray-600">64%</div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    D
-                  </div>
-                  <div className="text-sm text-gray-700">Desktop</div>
+                <div className="text-sm text-gray-700 font-medium">
+                  Desktop:
                 </div>
-                <div className="text-sm text-gray-600">28%</div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-red-500 bg-white relative">
+                  <span className="text-xs font-bold text-red-600">28%</span>
+                </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    T
-                  </div>
-                  <div className="text-sm text-gray-700">Tablet</div>
+                <div className="text-sm text-gray-700 font-medium">Tablet:</div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-gray-400 bg-white relative">
+                  <span className="text-xs font-bold text-gray-600">8%</span>
                 </div>
-                <div className="text-sm text-gray-600">8%</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-700 font-medium">iOS:</div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-red-500 bg-white relative">
+                  <span className="text-xs font-bold text-red-600">31%</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-700 font-medium">
+                  Android:
+                </div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-red-500 bg-white relative">
+                  <span className="text-xs font-bold text-red-600">33%</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Performance Metrics */}
-        <div>
+        {/* Performance Metrics Section */}
+        <section>
           <h2 className="text-lg font-bold text-[#0A1B2E] mb-4">
             PERFORMANCE METRICS
           </h2>
@@ -148,10 +215,10 @@ export default function AdminAnalyticsPage() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Report Generator */}
-        <div>
+        {/* Report Generator Section */}
+        <section>
           <h2 className="text-lg font-bold text-[#0A1B2E] mb-4">
             REPORT GENERATOR
           </h2>
@@ -197,10 +264,10 @@ export default function AdminAnalyticsPage() {
               </button>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Footer action buttons */}
-        <div className="flex gap-4 mt-6">
+        <section className="flex gap-4 mt-6">
           <button className="px-6 py-3 bg-slate-900 text-white rounded">
             Export All Data
           </button>
@@ -210,8 +277,8 @@ export default function AdminAnalyticsPage() {
           <button className="px-6 py-3 bg-white border border-gray-200 rounded">
             Set Up Alerts
           </button>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }
