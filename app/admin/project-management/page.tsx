@@ -179,7 +179,7 @@ export default function ProjectManagementPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
-    <main className="min-h-screen p-8 bg-[#EAEAEA]">
+    <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
         <h1 className="text-sm font-semibold text-[#0A1B2E]">

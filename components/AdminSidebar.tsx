@@ -41,8 +41,8 @@ const sidebarItems: SidebarItem[] = [
     children: [
       { label: "User Directory", href: "/admin/user-management" },
       { label: "Role Management", href: "/admin/role-management" },
-      { label: "Permission Sets", href: "/admin/permission-sets" },
-      { label: "User Analytics", href: "/admin/user-analytics" },
+      // { label: "Permission Sets", href: "/admin/permission-sets" },
+      // { label: "User Analytics", href: "/admin/user-analytics" },
     ],
   },
   {
@@ -99,7 +99,12 @@ const sidebarItems: SidebarItem[] = [
       { label: "Backup & Restore", href: "/admin/health/backup-restore" },
     ],
   },
-  {
+   {
+    icon: <BarChart3 className="w-5 h-5" />,
+    label: "BILLING & REVENUE",
+    href: "/admin/billing",
+  },
+    {
     icon: <AlertTriangle className="w-5 h-5" />,
     label: "SUPPORT MANAGEMENT",
     children: [
@@ -108,11 +113,8 @@ const sidebarItems: SidebarItem[] = [
       
     ],
   },
-  {
-    icon: <BarChart3 className="w-5 h-5" />,
-    label: "BILLING & REVENUE",
-    href: "/admin/billing",
-  },
+ 
+
   // {
   //   icon: <AlertTriangle className="w-5 h-5" />,
   //   label: "ALERT CENTER",
