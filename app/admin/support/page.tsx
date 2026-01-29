@@ -1,12 +1,43 @@
 "use client";
 
+import { useState } from "react";
+import { X } from "lucide-react";
+
+interface Ticket {
+  id: string;
+  subject: string;
+  user: string;
+  status: "closed" | "resolved" | "pending";
+  userEmail?: string;
+  company?: string;
+  opened?: string;
+  lastUpdate?: string;
+  priority?: string;
+  category?: string;
+  userMessage?: string;
+  supportResponse?: string;
+  attachments?: string[];
+}
+
 export default function SupportCenterPage() {
-  const tickets = [
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+
+  const tickets: Ticket[] = [
     {
       id: "TKT-9642",
       subject: "AR tool working",
       user: "Mike J",
       status: "closed",
+      userEmail: "Mike Johnson",
+      company: "ABC Construction",
+      opened: "10:35 AM",
+      lastUpdate: "10:30 AM",
+      priority: "High",
+      category: "Technical Issue",
+      userMessage: "AR glasses not connecting to task WIP-208. Error code 42?",
+      supportResponse:
+        "Checking device status.... Device HI2-204 offline since 09:45. Please try restarting. If persists, we'll dispatch replacement",
+      attachments: ["error_screenshot.png", "device_log.txt"],
     },
     {
       id: "TKT-1641",
@@ -89,7 +120,8 @@ export default function SupportCenterPage() {
                 {tickets.map((ticket, index) => (
                   <tr
                     key={index}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition"
+                    onClick={() => setSelectedTicket(ticket)}
+                    className="border-b border-gray-200 hover:bg-gray-50 transition cursor-pointer"
                   >
                     <td className="px-8 py-4">
                       <span className="text-xs text-gray-600">
@@ -195,6 +227,123 @@ export default function SupportCenterPage() {
           </div>
         </section>
       </div>
+
+      {/* Ticket Modal */}
+      {selectedTicket && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <span className="text-slate-900">📋</span>
+                <h2 className="text-xl font-bold text-slate-900">
+                  TICKET {selectedTicket.id}:{" "}
+                  {selectedTicket.subject.toUpperCase()}
+                </h2>
+              </div>
+              <button
+                onClick={() => setSelectedTicket(null)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+              >
+                <X size={24} className="text-gray-600" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="px-8 py-6 space-y-6">
+              {/* User & Company Info */}
+              <div>
+                <p className="text-sm text-gray-700">
+                  <span className="font-medium">User:</span>{" "}
+                  {selectedTicket.userEmail}{" "}
+                  <span className="text-gray-400">|</span>{" "}
+                  <span className="font-medium">Company:</span>{" "}
+                  {selectedTicket.company}
+                </p>
+              </div>
+
+              {/* Metadata */}
+              <div>
+                <p className="text-sm text-gray-700 mb-2">
+                  Opened: {selectedTicket.opened}{" "}
+                  <span className="text-gray-400">|</span> Last Update:{" "}
+                  {selectedTicket.lastUpdate}
+                </p>
+                <p className="text-sm text-gray-700">
+                  Priority:{" "}
+                  <span className="font-medium">{selectedTicket.priority}</span>{" "}
+                  <span className="text-gray-400">|</span> Category:{" "}
+                  <span className="font-medium">{selectedTicket.category}</span>
+                </p>
+              </div>
+
+              {/* User Message */}
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">
+                  USER MESSAGE:
+                </h3>
+                <p className="text-sm text-gray-700">
+                  "{selectedTicket.userMessage}"
+                </p>
+              </div>
+
+              {/* Support Response */}
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">
+                  SUPPORT RESPONSE:
+                </h3>
+                <p className="text-sm text-gray-700">
+                  "{selectedTicket.supportResponse}"
+                </p>
+              </div>
+
+              {/* Attachments */}
+              {selectedTicket.attachments &&
+                selectedTicket.attachments.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">
+                      ATTACHMENTS:
+                    </h3>
+                    <ul className="space-y-1">
+                      {selectedTicket.attachments.map((attachment, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">
+                          • {attachment}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+              {/* Actions */}
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4">
+                  ACTIONS:
+                </h3>
+                <div className="grid grid-cols-3 gap-3">
+                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                    Reply
+                  </button>
+                  <button className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                    Call User
+                  </button>
+                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                    Escalate
+                  </button>
+                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                    Resolve
+                  </button>
+                  <button className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                    Attach File
+                  </button>
+                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                    Set Reminder
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
