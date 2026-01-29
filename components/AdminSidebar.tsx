@@ -15,6 +15,7 @@ import {
   AlertTriangle,
   HelpCircle,
   LogOut,
+  MessageCircle,
 } from "lucide-react";
 
 interface SidebarChild {
@@ -34,6 +35,11 @@ const sidebarItems: SidebarItem[] = [
     icon: <Home className="w-5 h-5" />,
     label: "DASHBOARD (Home)",
     href: "/admin",
+  },
+  {
+    icon: <MessageCircle className="w-5 h-5" />,
+    label: "CHAT",
+    href: "/admin/chat",
   },
   {
     icon: <Users className="w-5 h-5" />,
