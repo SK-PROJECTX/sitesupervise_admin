@@ -54,7 +54,7 @@ const sidebarItems: SidebarItem[] = [
         href: "/admin/project-management/#analytics",
       },
       { label: "Active Directory", href: "/admin/project-management/#active" },
-      { label: "Project Archive", href: "/admin/project-management/#archive" },
+      // { label: "Project Archive", href: "/admin/project-management/#archive" },
       {
         label: "Project Templates",
         href: "/admin/project-management/#templates",
@@ -79,7 +79,6 @@ const sidebarItems: SidebarItem[] = [
     label: "ANALYTICS & REPORTS",
     children: [
       { label: "Platform Usage", href: "/admin/analytics/#platform-usage" },
-      { label: "Billing & Revenue", href: "/admin/analytics/#billing-revenue" },
       {
         label: "Performance Metrics",
         href: "/admin/analytics/#performance-metrics",
@@ -102,17 +101,31 @@ const sidebarItems: SidebarItem[] = [
   },
   {
     icon: <AlertTriangle className="w-5 h-5" />,
-    label: "ALERT CENTER",
+    label: "SUPPORT MANAGEMENT",
     children: [
-      { label: "Active Alerts", href: "/admin/alerts/active" },
-      { label: "Alert Rules", href: "/admin/alerts/rules" },
-      {
-        label: "Notification Settings",
-        href: "/admin/alerts/notification-settings",
-      },
-      { label: "Alert Analytics", href: "/admin/alerts/analytics" },
+      { label: "Ticket Management", href: "/admin/support/#active" },
+      { label: "Support Analytics", href: "/admin/support/#rules" },
+      
     ],
   },
+  {
+    icon: <BarChart3 className="w-5 h-5" />,
+    label: "BILLING & REVENUE",
+    href: "/admin/billing",
+  },
+  // {
+  //   icon: <AlertTriangle className="w-5 h-5" />,
+  //   label: "ALERT CENTER",
+  //   children: [
+  //     { label: "Active Alerts", href: "/admin/alerts/active" },
+  //     { label: "Alert Rules", href: "/admin/alerts/rules" },
+  //     {
+  //       label: "Notification Settings",
+  //       href: "/admin/alerts/notification-settings",
+  //     },
+  //     { label: "Alert Analytics", href: "/admin/alerts/analytics" },
+  //   ],
+  // },
 ];
 
 export default function AdminSidebar() {
