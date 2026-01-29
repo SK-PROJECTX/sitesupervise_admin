@@ -15,6 +15,7 @@ import {
   Download,
   ArrowUpRight,
 } from "lucide-react";
+import { text } from "stream/consumers";
 
 const statsCards = [
   {
@@ -22,8 +23,9 @@ const statsCards = [
     value: "1,842",
     badge: "Live",
     badgeClass: "bg-green-500",
-    cardClass: "bg-gray-900 text-white",
-    textClass: "text-white",
+    cardClass: "bg-white",
+    textClass: "text-gray-900, hover:text-white",
+    cardhoverClass: "hover:bg-[#001220]", 
     border: "",
     corner: "br", // bottom-right straight
   },
@@ -33,7 +35,8 @@ const statsCards = [
     badge: "Active",
     badgeClass: "bg-red-500",
     cardClass: "bg-white",
-    textClass: "text-gray-900",
+    textClass: "text-gray-900, hover:text-white",
+    cardhoverClass: "hover:bg-[#001220] ", 
     border: "border-2 border-gray-200",
     corner: "bl", // bottom-left straight
   },
@@ -43,7 +46,8 @@ const statsCards = [
     badge: "Optimal",
     badgeClass: "bg-green-500",
     cardClass: "bg-white",
-    textClass: "text-gray-900",
+    textClass: "text-gray-900, hover:text-white",
+    cardhoverClass: "hover:bg-[#001220] ", 
     border: "border-2 border-gray-200",
     corner: "tr", // top-right straight
   },
@@ -53,7 +57,8 @@ const statsCards = [
     badge: "+12%",
     badgeClass: "bg-green-500",
     cardClass: "bg-white",
-    textClass: "text-gray-900",
+    textClass: "text-gray-900, hover:text-white",
+    cardhoverClass: "hover:bg-[#001220] ", 
     border: "border-2 border-gray-200",
     corner: "tl", // top-left straight
   },
@@ -114,9 +119,9 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen overflow-y-auto">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8 bg-white px-8 py-16 w-full">
+      <div className="flex justify-between items-center mb-8 bg-white px-8 py-3 w-full">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-600 mb-1">
+          <h1 className="text-xl text-[#001220] font-poppins font-bold mb-1">
             Platform Command Center - Super Admin
           </h1>
         </div>
@@ -130,7 +135,7 @@ export default function AdminDashboardPage() {
             <div className="grid md:grid-cols-2 gap-3 mb-28 ">
               {/* Key Platform Metrics */}
               <div className="rounded-lg col-span-1">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
                   KEY PLATFORM METRICS
                 </h2>
 
@@ -140,6 +145,8 @@ export default function AdminDashboardPage() {
                       key={card.title}
                       className={`
                         ${card.cardClass}
+                        ${card.cardhoverClass}
+                       
                         ${card.border}
                         ${cornerClassMap[card.corner]}
                         p-6 relative overflow-hidden flex flex-col justify-between
@@ -151,7 +158,8 @@ export default function AdminDashboardPage() {
                             card.cardClass.includes("bg-gray-900")
                               ? "text-gray-400"
                               : "text-gray-600"
-                          }`}
+                          }
+                          `}
                         >
                           {card.title}
                         </span>
@@ -168,7 +176,7 @@ export default function AdminDashboardPage() {
                       </div>
 
                       <div
-                        className={`inline-block ${card.badgeClass} text-white text-xs px-2 py-1 rounded-4xlKEY PLATFORM METRICS mt-4 w-18 text-center`}
+                        className={`inline-block ${card.badgeClass} rounded-full text-white text-xs px-2 py-1 rounded-4xlKEY PLATFORM METRICS mt-4 w-18 text-center`}
                       >
                         {card.badge}
                       </div>
@@ -179,7 +187,7 @@ export default function AdminDashboardPage() {
 
               {/* System Health Dashboard */}
               <div className="rounded-lg col-span-1 h-full">
-                <h3 className="text-3xl font-bold text-gray-900 mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">
                   REAL-TIME SYSTEM MONITOR
                 </h3>
                 <div className="bg-white px-6 py-8 rounded-2xl shadow-sm h-full">

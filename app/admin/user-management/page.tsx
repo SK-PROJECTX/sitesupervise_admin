@@ -38,8 +38,8 @@ export default function UserManagementPage() {
   ];
 
   return (
-    <main className="min-h-screen p-8  bg-[#EAEAEA]">
-      <div className="bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
+    <main className="min-h-screen  bg-[#EAEAEA]">
+      <div className="bg-white border-b border-gray-200 px-8 py-6 w-full flex items-center justify-between">
         <h1 className="text-sm font-semibold text-[#0A1B2E]">
           User management Console
         </h1>
