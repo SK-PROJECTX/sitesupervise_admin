@@ -81,7 +81,7 @@ export default function AdminAnalyticsPage() {
                     <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
                       Strong
                     </div>
-                  </div>
+          cd        </div>
                   <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
                     <ArrowUpRight
                       size={18}
