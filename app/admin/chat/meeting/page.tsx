@@ -9,6 +9,11 @@ import {
   Share2,
   Phone,
   Settings,
+  CalendarCheck2,
+  SquareMousePointer,
+  MessageSquare,
+  X,
+  Send,
 } from "lucide-react";
 
 interface Participant {
@@ -23,6 +28,7 @@ export default function MeetingPage() {
   const [isMicOn, setIsMicOn] = useState(true);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [elapsedTime, setElapsedTime] = useState("00:45:12");
+  const [showChatModal, setShowChatModal] = useState(false);
 
   const participants: Participant[] = [
     {
@@ -64,16 +70,16 @@ export default function MeetingPage() {
       {/* Main Content */}
       <div className="flex flex-1 gap-6 p-6 overflow-hidden">
         {/* Left Panel - Participants & Agenda */}
-        <div className="w-80 space-y-6 overflow-y-auto">
+        <div className="w-120 space-y-6 overflow-y-auto">
           {/* Control Buttons */}
           <div className="flex gap-3">
             <button className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-3 rounded-lg hover:bg-slate-800 transition">
-              <span>📊</span>
-              <span className="text-sm font-medium">Share Screen</span>
+              <CalendarCheck2 size={16} />
+              <span className="text-sm font-medium">Agenda Item</span>
             </button>
             <button className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition">
-              <span>💬</span>
-              <span className="text-sm font-medium">Start Recording</span>
+              <SquareMousePointer size={16} />
+              <span className="text-sm font-medium">Meeting Action</span>
             </button>
           </div>
 
@@ -109,13 +115,16 @@ export default function MeetingPage() {
         <div className="flex-1 flex flex-col space-y-6">
           {/* Control Buttons Top Right */}
           <div className="flex gap-3 justify-end">
-            <button className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition text-sm font-medium">
-              <Settings size={16} />
-              Settings and features
+            <button
+              onClick={() => setShowChatModal(true)}
+              className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition text-sm font-medium"
+            >
+              <MessageSquare size={16} />
+              <span>Meeting Chat and actions</span>
             </button>
             <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
-              <span>⋯</span>
-              More Options
+              <Settings size={16} />
+              <span>Controls</span>
             </button>
           </div>
 
@@ -159,6 +168,71 @@ export default function MeetingPage() {
           </div>
         </div>
       </div>
+      {/* Chat Modal (opens when Meeting Chat button clicked) */}
+      {showChatModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl w-[880px] max-w-[96%] h-[86vh] overflow-hidden relative border-2 border-blue-500">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b">
+              <h3 className="text-sm font-bold tracking-wide">
+                MESSAGE CHAT &amp; ACTIONS
+              </h3>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowChatModal(false)}
+                  className="p-2 rounded hover:bg-gray-100"
+                >
+                  <X size={18} />
+                </button>
+                <button className="p-2 rounded hover:bg-gray-100">...</button>
+              </div>
+            </div>
+
+            {/* Messages area */}
+            <div className="px-8 py-6 h-[calc(86vh-170px)] overflow-y-auto">
+              <div className="flex justify-end">
+                <div className="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-tr-none max-w-[60%]">
+                  John, can you pan to the left? I want to.......
+                </div>
+                <div className="text-xs text-gray-400 ml-3">10:15 AM</div>
+              </div>
+
+              <div className="mt-6">
+                <div className="bg-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-tl-none inline-block">
+                  @Jane started on Live Feed
+                </div>
+                <div className="text-xs text-gray-400 ml-3 inline-block">
+                  10:30 AM
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <div className="bg-gray-100 text-gray-800 px-4 py-2 rounded-2xl rounded-tl-none inline-block">
+                  @Action Item 'Verify spacing' created
+                </div>
+                <div className="text-xs text-gray-400 ml-3 inline-block">
+                  10:30 AM
+                </div>
+              </div>
+            </div>
+
+            {/* Input area (sticky bottom) */}
+            <div className="absolute left-0 right-0 bottom-0 px-6 py-4 border-t bg-white flex items-center gap-3">
+              <input
+                type="text"
+                placeholder="Type Reply...."
+                className="flex-1 px-4 py-3 border border-gray-200 rounded-full focus:outline-none"
+              />
+              <button className="p-3 rounded-full text-gray-600 hover:bg-gray-100">
+                <span className="text-xl">@</span>
+              </button>
+              <button className="p-3 bg-transparent text-gray-600 hover:bg-gray-100 rounded-full">
+                <Send size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bottom Control Bar */}
       <div className="bg-white border-t border-gray-200 px-8 py-4 flex items-center justify-center gap-6">
