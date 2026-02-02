@@ -58,7 +58,14 @@ export default function Page() {
       router.push("/admin");
     } catch (error: any) {
       console.error('Login error:', error);
-      setError(error.response?.data?.error || error.message || "Login failed");
+      console.error('Login error details:', error.response?.data);
+      const errorMessage = error.response?.data?.errors?.error || 
+                          error.response?.data?.error || 
+                          error.response?.data?.detail || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          "Login failed";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
