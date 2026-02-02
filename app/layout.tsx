@@ -1,5 +1,3 @@
-import AdminSidebar from "@/components/AdminSidebar";
-
 import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
@@ -11,20 +9,21 @@ const poppins = Poppins({
   display: "swap",
 });
 
-
 export const metadata: Metadata = {
   title: "Site Supervise Admin Dashboard",
-  description: "Description here",
+  description: "Admin dashboard for Site Supervise platform",
 };
 
-export default function AdminDashboardLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="EN" className="poppins.variable">
-      <body>{children}</body>
+    <html lang="en" className={poppins.variable}>
+      <body className={poppins.className}>
+        {children}
+      </body>
     </html>
   );
 }

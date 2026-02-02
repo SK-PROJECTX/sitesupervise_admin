@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
   ChevronRight,
@@ -19,6 +19,8 @@ import {
   BadgeInfo,
   Wallet,
 } from "lucide-react";
+import { clearAuthTokens } from "../lib/auth";
+import { adminAuthService } from "../lib/services";
 
 interface SidebarChild {
   label: string;
@@ -144,6 +146,18 @@ export default function AdminSidebar() {
   const [expandedItems, setExpandedItems] = useState<string[]>(initialExpanded);
 
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await adminAuthService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      clearAuthTokens();
+      router.push('/login');
+    }
+  };
 
   const toggleExpanded = (label: string) => {
     setExpandedItems((prev) =>
@@ -250,13 +264,13 @@ export default function AdminSidebar() {
           <HelpCircle className="w-5 h-5" />
           <span>Help Center</span>
         </Link>
-        <Link
-          href="/logout"
-          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-700/50 transition-colors mt-2"
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-700/50 transition-colors mt-2 w-full text-left"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>
-        </Link>
+        </button>
       </div>
     </div>
   );
