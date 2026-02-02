@@ -2,32 +2,26 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { adminAuthService } from "../../lib/services";
+import { setAuthTokens } from "../../lib/auth";
 
 export default function Page() {
-  const [role, setRole] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
   const [loading, setLoading] = useState(false);
-   const [passwordError, setPasswordError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate password
     if (!formData.password || formData.password.length < 6) {
       setPasswordError("Password must be at least 6 characters");
-      return;
-    }
-
-    if (!role) {
-      setError("Please select a role");
       return;
     }
 
@@ -35,6 +29,39 @@ export default function Page() {
     setError("");
     setPasswordError("");
 
+    try {
+      const response = await adminAuthService.login(formData.email, formData.password);
+      
+      console.log('Login response:', response.data); // Debug log
+      
+      // Access user data from the nested structure
+      const userData = response.data.data?.user || response.data.user;
+      
+      if (!userData) {
+        setError("Invalid response format from server");
+        return;
+      }
+      
+      // Check if user has admin role
+      if (userData.role !== 'ADMIN') {
+        setError(`Access denied. Admin privileges required. Your role: ${userData.role}`);
+        return;
+      }
+
+      // Store tokens using auth utility
+      setAuthTokens(
+        response.data.data?.access_token || response.data.access_token,
+        response.data.data?.refresh_token || response.data.refresh_token,
+        userData
+      );
+      
+      router.push("/admin");
+    } catch (error: any) {
+      console.error('Login error:', error);
+      setError(error.response?.data?.error || error.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +71,17 @@ export default function Page() {
       {/* Right side - Form */}
       <div className="flex-1 flex items-center justify-center bg-white px-6 md:px-16 py-12">
         <div className="max-w-3xl w-full">
+          {/* Back to Home Link */}
+          <div className="mb-6">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-[#022C4F] hover:text-[#0F181F] transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Back to Home</span>
+            </Link>
+          </div>
+
           {/* Top right sign-in */}
            <div className="flex md:hidden flex-col items-center justify-center mb-8">
               <img
@@ -107,8 +145,8 @@ export default function Page() {
             )}
             <button
               type="submit"
-              disabled={loading || !role}
-              className="w-full bg-[#022C4F] text-white py-5 rounded-full mt-4 transition cursor-pointer hover:bg-[#0F181F]"
+              disabled={loading}
+              className="w-full bg-[#022C4F] text-white py-5 rounded-full mt-4 transition cursor-pointer hover:bg-[#0F181F] disabled:opacity-50"
             >
               {loading ? "Signing In..." : "Login"}
             </button>
