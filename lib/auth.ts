@@ -43,7 +43,7 @@ export const logout = async () => {
     
     // Call logout API if refresh token exists
     if (refreshToken) {
-      await fetch('https://sitesupervise-backend-12.onrender.com/api/v1/auth/logout/', {
+      await fetch('https://sitesupervise-backend-tkyx.onrender.com/api/v1/auth/logout/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
