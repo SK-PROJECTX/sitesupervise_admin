@@ -1,9 +1,11 @@
 import { ArrowUpRight, Calendar } from "lucide-react";
+import PieChart from "../../../components/PieChart";
+import LineChart from "../../../components/LineChart";
 
 export default function AdminAnalyticsPage() {
   return (
-    <main className="min-h-screen p-8">
-      <div className="flex items-start justify-between mb-6">
+    <main className="min-h-screen bg-[#EAEAEA]">
+      <div className="bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#0A1B2E]">
           Platform Analytics & Reporting
         </h1>
@@ -15,7 +17,8 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      <div className="space-y-8">
+    
+      <div className=" px-8 py-10 space-y-8">
         {/* Top stats row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: 2x2 grid of metrics */}
@@ -81,7 +84,7 @@ export default function AdminAnalyticsPage() {
                     <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
                       Strong
                     </div>
-                  </div>
+          cd        </div>
                   <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
                     <ArrowUpRight
                       size={18}
@@ -128,7 +131,8 @@ export default function AdminAnalyticsPage() {
               <div className="text-xs text-gray-600 mb-3">
                 DAILY ACTIVE USERS (30-day trend)
               </div>
-              <div className="h-48 bg-gray-50 rounded-lg"></div>
+              <LineChart />
+              {/* <div className="h-48 bg-gray-50 rounded-lg"></div> */}
             </div>
           </div>
         </div>
@@ -142,7 +146,7 @@ export default function AdminAnalyticsPage() {
               <div className="text-sm font-semibold text-[#0A1B2E] mb-4">
                 MODULE USAGE DISTRIBUTION
               </div>
-              <div className="h-48 bg-gray-50 rounded-lg"></div>
+              <PieChart />
             </div>
           </div>
 

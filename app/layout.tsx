@@ -1,21 +1,29 @@
-import AdminSidebar from "@/components/AdminSidebar";
-
 import "./globals.css";
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Your App",
-  description: "Description here",
+  title: "Site Supervise Admin Dashboard",
+  description: "Admin dashboard for Site Supervise platform",
 };
 
-export default function AdminDashboardLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="EN" className="">
-      <body>{children}</body>
+    <html lang="en" className={poppins.variable}>
+      <body className={poppins.className}>
+        {children}
+      </body>
     </html>
   );
 }
