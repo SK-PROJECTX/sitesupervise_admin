@@ -18,6 +18,8 @@ import {
   MessageCircle,
   BadgeInfo,
   Wallet,
+  HeadphoneOffIcon,
+  Headphones,
 } from "lucide-react";
 import { clearAuthTokens } from "../lib/auth";
 import { adminAuthService } from "../lib/services";
@@ -39,11 +41,6 @@ const sidebarItems: SidebarItem[] = [
     icon: <Home className="w-5 h-5" />,
     label: "DASHBOARD (Home)",
     href: "/admin",
-  },
-  {
-    icon: <MessageCircle className="w-5 h-5" />,
-    label: "CHAT",
-    href: "/admin/chat",
   },
   {
     icon: <Users className="w-5 h-5" />,
@@ -113,6 +110,16 @@ const sidebarItems: SidebarItem[] = [
     icon: <Wallet className="w-5 h-5" />,
     label: "BILLING & REVENUE",
     href: "/admin/billing",
+  },
+   {
+    icon: <MessageCircle className="w-5 h-5" />,
+    label: "MESSAGES",
+    href: "/admin/chat",
+  },
+   {
+    icon: <Headphones className="w-5 h-5" />,
+    label: "CONFERENCES",
+    href: "/admin/meeting",
   },
     {
     icon: <BadgeInfo className="w-5 h-5" />,
