@@ -106,31 +106,29 @@ const sidebarItems: SidebarItem[] = [
       { label: "Backup & Restore", href: "/admin/health/backup-restore" },
     ],
   },
-   {
+  {
     icon: <Wallet className="w-5 h-5" />,
     label: "BILLING & REVENUE",
     href: "/admin/billing",
   },
-   {
+  {
     icon: <MessageCircle className="w-5 h-5" />,
     label: "MESSAGES",
     href: "/admin/chat",
   },
-   {
+  {
     icon: <Headphones className="w-5 h-5" />,
     label: "CONFERENCES",
     href: "/admin/meeting",
   },
-    {
+  {
     icon: <BadgeInfo className="w-5 h-5" />,
     label: "SUPPORT MANAGEMENT",
     children: [
       { label: "Ticket Management", href: "/admin/support/#active" },
       { label: "Support Analytics", href: "/admin/support/#rules" },
-      
     ],
   },
- 
 
   // {
   //   icon: <AlertTriangle className="w-5 h-5" />,
@@ -147,7 +145,13 @@ const sidebarItems: SidebarItem[] = [
   // },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({
+  isOpen = false,
+  onClose = () => {},
+}: {
+  isOpen?: boolean;
+  onClose?: () => void;
+}) {
   // Start with all sections expanded to match the image
   const initialExpanded = sidebarItems.map((i) => i.label);
   const [expandedItems, setExpandedItems] = useState<string[]>(initialExpanded);
@@ -159,10 +163,10 @@ export default function AdminSidebar() {
     try {
       await adminAuthService.logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       clearAuthTokens();
-      router.push('/login');
+      router.push("/login");
     }
   };
 
@@ -181,10 +185,20 @@ export default function AdminSidebar() {
     );
   };
 
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="w-72 bg-[#0f172a] text-white flex flex-col h-screen">
+    <div
+      className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0f172a] text-white flex flex-col h-screen transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       {/* Header */}
-      <div className="p-4 border-b border-gray-700">
+      <div className="p-4 border-b border-gray-700 flex justify-between items-center">
         <div className="flex items-center gap-3">
           {/* Placeholder for logo - replace src with actual logo path */}
           <img
@@ -198,6 +212,25 @@ export default function AdminSidebar() {
             <div className="text-xs text-gray-400">SUPER ADMIN DASHBOARD</div>
           </div>
         </div>
+        <button
+          onClick={onClose}
+          className="md:hidden text-gray-400 hover:text-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
       </div>
 
       {/* Main Menu */}
@@ -209,7 +242,14 @@ export default function AdminSidebar() {
           {sidebarItems.map((item) => (
             <div key={item.label} className="mb-1">
               <button
-                onClick={() => item.children && toggleExpanded(item.label)}
+                onClick={() => {
+                  if (item.children) {
+                    toggleExpanded(item.label);
+                  } else {
+                    handleLinkClick();
+                    if (item.href) router.push(item.href);
+                  }
+                }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors ${
                   isParentActive(item) ? "bg-gray-700" : "hover:bg-gray-700/50"
                 }`}
@@ -217,7 +257,20 @@ export default function AdminSidebar() {
                 <div className="flex items-center gap-3">
                   {item.icon}
                   {item.href ? (
-                    <Link href={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => {
+                        // Prevent default link behavior if we are handling navigation via button click above,
+                        // but actually the Link component inside the button handles it.
+                        // However, the structure is: button -> div -> Link.
+                        // Clicking the button triggers the button onClick.
+                        // Clicking the Link triggers the Link navigation.
+                        // Start by preventing propagation if needed, or just rely on Link.
+                        // Actually, the previous code had Link inside button which is invalid HTML5 but often works in React.
+                        // Let's keep structure but ensure onClose is called.
+                        handleLinkClick();
+                      }}
+                    >
                       <span>{item.label}</span>
                     </Link>
                   ) : (
@@ -245,6 +298,7 @@ export default function AdminSidebar() {
                       <Link
                         key={child.href}
                         href={child.href}
+                        onClick={handleLinkClick}
                         className={`block px-3 py-1.5 text-sm rounded-lg transition-colors ${
                           isActive
                             ? "bg-gray-700 text-white"
@@ -266,6 +320,7 @@ export default function AdminSidebar() {
       <div className="p-4 border-t border-gray-700">
         <Link
           href="/help"
+          onClick={handleLinkClick}
           className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-700/50 transition-colors"
         >
           <HelpCircle className="w-5 h-5" />

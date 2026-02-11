@@ -132,7 +132,7 @@ export default function AdminDashboardPage() {
         <div className="space-y-16">
           {/* KEY PLATFORM METRICS & SYSTEM HEALTH SECTION */}
           <section id="platform-metrics">
-            <div className="grid md:grid-cols-2 gap-3 mb-28 ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-28 ">
               {/* Key Platform Metrics */}
               <div className="rounded-lg col-span-1">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
