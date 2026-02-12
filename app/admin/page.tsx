@@ -15,7 +15,11 @@ import {
   Download,
   ArrowUpRight,
 } from "lucide-react";
-import { text } from "stream/consumers";
+import { PageHeader } from "../../components/admin/PageHeader";
+import { Card } from "../../components/ui/Card";
+import { SectionHeader } from "../../components/ui/SectionHeader";
+import { Button } from "../../components/ui/Button";
+import { Badge } from "../../components/ui/Badge";
 
 const statsCards = [
   {
@@ -25,7 +29,7 @@ const statsCards = [
     badgeClass: "bg-green-500",
     cardClass: "bg-white",
     textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220]", 
+    cardhoverClass: "hover:bg-[#001220]",
     border: "",
     corner: "br", // bottom-right straight
   },
@@ -36,7 +40,7 @@ const statsCards = [
     badgeClass: "bg-red-500",
     cardClass: "bg-white",
     textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220] ", 
+    cardhoverClass: "hover:bg-[#001220] ",
     border: "border-2 border-gray-200",
     corner: "bl", // bottom-left straight
   },
@@ -47,7 +51,7 @@ const statsCards = [
     badgeClass: "bg-green-500",
     cardClass: "bg-white",
     textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220] ", 
+    cardhoverClass: "hover:bg-[#001220] ",
     border: "border-2 border-gray-200",
     corner: "tr", // top-right straight
   },
@@ -58,7 +62,7 @@ const statsCards = [
     badgeClass: "bg-green-500",
     cardClass: "bg-white",
     textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220] ", 
+    cardhoverClass: "hover:bg-[#001220] ",
     border: "border-2 border-gray-200",
     corner: "tl", // top-left straight
   },
@@ -119,25 +123,20 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen overflow-y-auto">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8 bg-white px-8 py-3 w-full">
-        <div>
-          <h1 className="text-xl text-[#001220] font-poppins font-bold mb-1">
-            Platform Command Center - Super Admin
-          </h1>
+      <PageHeader title="Platform Command Center - Super Admin">
+        <div className="text-sm text-gray-600 border p-2 rounded">
+          Refresh: 10s
         </div>
-        <div className="text-sm text-gray-600 border p-6">Refresh: 10s</div>
-      </div>
+      </PageHeader>
 
       <div className="gap-6 p-6 md:p-10 ">
         <div className="space-y-16">
           {/* KEY PLATFORM METRICS & SYSTEM HEALTH SECTION */}
           <section id="platform-metrics">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-28 ">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 mb-28 ">
               {/* Key Platform Metrics */}
               <div className="rounded-lg col-span-1">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  KEY PLATFORM METRICS
-                </h2>
+                <SectionHeader title="KEY PLATFORM METRICS" />
 
                 <div className="grid grid-cols-2 gap-4 mb-6 h-full">
                   {statsCards.map((card) => (
@@ -146,7 +145,7 @@ export default function AdminDashboardPage() {
                       className={`
                         ${card.cardClass}
                         ${card.cardhoverClass}
-                       
+                       ${card.textClass}
                         ${card.border}
                         ${cornerClassMap[card.corner]}
                         p-6 relative overflow-hidden flex flex-col justify-between
@@ -170,13 +169,13 @@ export default function AdminDashboardPage() {
                       </div>
 
                       <div
-                        className={`text-5xl font-bold mb-2 ${card.textClass}`}
+                        className={`text-3xl md:text-4xl xl:text-5xl font-bold mb-2`}
                       >
                         {card.value}
                       </div>
 
                       <div
-                        className={`inline-block ${card.badgeClass} rounded-full text-white text-xs px-2 py-1 rounded-4xlKEY PLATFORM METRICS mt-4 w-18 text-center`}
+                        className={`inline-block ${card.badgeClass} rounded-full text-white text-xs px-2 py-1 mt-4 w-18 text-center`}
                       >
                         {card.badge}
                       </div>
@@ -187,10 +186,8 @@ export default function AdminDashboardPage() {
 
               {/* System Health Dashboard */}
               <div className="rounded-lg col-span-1 h-full">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">
-                  REAL-TIME SYSTEM MONITOR
-                </h3>
-                <div className="bg-white px-6 py-8 rounded-2xl shadow-sm h-full">
+                <SectionHeader title="REAL-TIME SYSTEM MONITOR" />
+                <Card className="h-full">
                   <h4 className="text-lg font-bold text-gray-900 mb-6">
                     SYSTEM HEALTH DASHBOARD
                   </h4>
@@ -219,14 +216,14 @@ export default function AdminDashboardPage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </Card>
               </div>
             </div>
           </section>
 
           {/* LIVE SERVICE STATUS SECTION */}
           <section id="service-status">
-            <div className="bg-white rounded-2xl p-8">
+            <Card>
               <h3 className="text-sm font-semibold text-gray-900 mb-6 tracking-wide">
                 LIVE SERVICE STATUS:
               </h3>
@@ -262,26 +259,24 @@ export default function AdminDashboardPage() {
               {/* Actions */}
               <div className="mt-10 flex gap-6 ">
                 <Link href="/admin/system-health-monitor">
-                  <button className="bg-slate-900 text-white py-4 px-16 rounded-xl text-sm font-medium hover:bg-slate-800 transition">
+                  <Button className="bg-slate-900 text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
                     View Detailed Health
-                  </button>
+                  </Button>
                 </Link>
 
-                <button className="bg-primary text-white py-4 px-16 rounded-xl text-sm font-medium hover:bg-primary/80 transition">
+                <Button className="bg-primary text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
                   Run Diagnostics
-                </button>
+                </Button>
               </div>
-            </div>
+            </Card>
           </section>
 
           {/* PLATFORM ACTIVITY FEED SECTION */}
           <section id="activity-feed">
             <div className="rounded-2xl pb-16">
-              <h2 className="text-lg font-bold text-gray-900 mb-6">
-                PLATFORM ACTIVITY FEED
-              </h2>
+              <SectionHeader title="PLATFORM ACTIVITY FEED" />
 
-              <div className="bg-white rounded-2xl p-8">
+              <Card>
                 <h3 className="text-sm font-semibold text-gray-900 mb-6">
                   LIVE PLATFORM ACTIVITY
                 </h3>
@@ -384,97 +379,98 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
+            </div>
+          </section>
+
+          {/* ALERTS & NOTIFICATION CENTER SECTION */}
+          <section id="alerts-center">
+            <div className="space-y-6">
+              <Card>
+                <div className="flex justify-between items-center mb-6">
+                  <SectionHeader
+                    title="ALERT & NOTIFICATION CENTER"
+                    className="mb-0"
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Bell className="w-5 h-5 text-gray-900" />
+
+                    <h3 className="text-sm font-semibold text-gray-900">
+                      ACTIVE ALERTS (3)
+                    </h3>
+                  </div>
+
+                  <div className="space-y-3">
+                    {/* Alert 1 */}
+                    <div className="border-l-4 border-yellow-500 bg-gray-50 p-4 rounded-r">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs font-semibold text-gray-900">
+                          1. Medium: Storage at 82% capacity
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button className="px-3 py-1 bg-gray-900 text-white text-xs h-auto rounded hover:bg-gray-800">
+                          Action
+                        </Button>
+                        <Button className="px-3 py-1 bg-blue-500 text-white text-xs h-auto rounded hover:bg-blue-600">
+                          Dismiss
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Alert 2 */}
+                    <div className="border-l-4 border-red-500 bg-gray-50 p-4 rounded-r">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs font-semibold text-gray-900">
+                          2. High: Unusual login pattern detected
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button className="px-3 py-1 bg-gray-900 text-white text-xs h-auto rounded hover:bg-gray-800">
+                          Action
+                        </Button>
+                        <Button className="px-3 py-1 bg-blue-500 text-white text-xs h-auto rounded hover:bg-blue-600">
+                          Dismiss
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Alert 3 */}
+                    <div className="border-l-4 border-blue-500 bg-gray-50 p-4 rounded-r">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs font-semibold text-gray-900">
+                          3. Low: API response time increasing
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button className="px-3 py-1 bg-gray-900 text-white text-xs h-auto rounded hover:bg-gray-800">
+                          Action
+                        </Button>
+                        <Button className="px-3 py-1 bg-blue-500 text-white text-xs h-auto rounded hover:bg-blue-600">
+                          Dismiss
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-10 flex gap-6 ">
+                      <Button className="bg-slate-900 text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
+                        View All Alerts
+                      </Button>
+
+                      <Button className="bg-primary text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
+                        Configure Alert Rules
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </section>
         </div>
-
-        {/* ALERTS & NOTIFICATION CENTER SECTION */}
-        <section id="alerts-center">
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-bold text-gray-900">
-                  ALERT & NOTIFICATION CENTER
-                </h2>
-              </div>
-
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Bell className="w-5 h-5 text-gray-900" />
-
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    ACTIVE ALERTS (3)
-                  </h3>
-                </div>
-
-                <div className="space-y-3">
-                  {/* Alert 1 */}
-                  <div className="border-l-4 border-yellow-500 bg-gray-50 p-4 rounded-r">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-semibold text-gray-900">
-                        1. Medium: Storage at 82% capacity
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-gray-900 text-white text-xs rounded hover:bg-gray-800">
-                        Action
-                      </button>
-                      <button className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">
-                        Dismiss
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Alert 2 */}
-                  <div className="border-l-4 border-red-500 bg-gray-50 p-4 rounded-r">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-semibold text-gray-900">
-                        2. High: Unusual login pattern detected
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-gray-900 text-white text-xs rounded hover:bg-gray-800">
-                        Action
-                      </button>
-                      <button className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">
-                        Dismiss
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Alert 3 */}
-                  <div className="border-l-4 border-blue-500 bg-gray-50 p-4 rounded-r">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-semibold text-gray-900">
-                        3. Low: API response time increasing
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-gray-900 text-white text-xs rounded hover:bg-gray-800">
-                        Action
-                      </button>
-                      <button className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">
-                        Dismiss
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="mt-10 flex gap-6 ">
-                    <button className="bg-slate-900 text-white py-4 px-16 rounded-xl text-sm font-medium hover:bg-slate-800 transition">
-                      View All Alerts
-                    </button>
-
-                    <button className="bg-primary text-white py-4 px-16 rounded-xl text-sm font-medium hover:bg-primary/80 transition">
-                      Configure Alert Rules
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );
