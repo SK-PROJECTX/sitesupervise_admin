@@ -63,11 +63,11 @@ interface MetricCard {
   label: string;
   value: number;
   percentage: number;
-  color: "orange" | "blue" | "gray";
+  color: "orange" | "blue" | "gray" | "green";
 }
 
 const METRICS: MetricCard[] = [
-  { label: "TOTAL PROJECTS", value: 142, percentage: 0, color: "gray" },
+  { label: "TOTAL PROJECTS", value: 142, percentage: 100, color: "green" },
   { label: "ACTIVE PROJECTS", value: 47, percentage: 33, color: "orange" },
   { label: "COMPLETED PROJECTS", value: 82, percentage: 58, color: "blue" },
   { label: "OVERDUE PROJECTS", value: 13, percentage: 9, color: "gray" },
@@ -78,7 +78,7 @@ function ProgressCircle({
   color,
 }: {
   percentage: number;
-  color: "orange" | "blue" | "gray";
+  color: "orange" | "blue" | "gray" | "green";
 }) {
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -87,6 +87,7 @@ function ProgressCircle({
     orange: "#FF6B35",
     blue: "#1E90FF",
     gray: "#D1D5DB",
+    green: "green",
   };
 
   return (

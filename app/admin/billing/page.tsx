@@ -281,74 +281,84 @@ export default function BillingPage() {
                 </h3>
               </div>
 
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="px-0 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                      INVOICE
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                      COMPANY
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                      AMOUNT
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                      DUE DATE
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                      STATUS
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
-                    <td className="px-0 py-4 text-sm text-slate-700">
-                      INV-1042
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">
-                      ABC Corset
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">$2,495</td>
-                    <td className="px-4 py-4 text-sm text-slate-700">15 Nov</td>
-                    <td className="px-4 py-4 text-sm">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
-                        Paid
-                      </span>
-                    </td>
-                  </tr>
-                  <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
-                    <td className="px-0 py-4 text-sm text-slate-700">
-                      INV-1041
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">
-                      Studio DGT
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">$890</td>
-                    <td className="px-4 py-4 text-sm text-slate-700">10 Nov</td>
-                    <td className="px-4 py-4 text-sm">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
-                        Due
-                      </span>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-gray-50 transition">
-                    <td className="px-0 py-4 text-sm text-slate-700">
-                      INV-1040
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">
-                      DivCorp
-                    </td>
-                    <td className="px-4 py-4 text-sm text-slate-700">$295</td>
-                    <td className="px-4 py-4 text-sm text-slate-700">05 Nov</td>
-                    <td className="px-4 py-4 text-sm">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
-                        Overdue
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[600px]">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="px-0 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                        INVOICE
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                        COMPANY
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                        AMOUNT
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                        DUE DATE
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                        STATUS
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                      <td className="px-0 py-4 text-sm text-slate-700">
+                        INV-1042
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        ABC Corset
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        $2,495
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        15 Nov
+                      </td>
+                      <td className="px-4 py-4 text-sm">
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
+                          Paid
+                        </span>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                      <td className="px-0 py-4 text-sm text-slate-700">
+                        INV-1041
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        Studio DGT
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">$890</td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        10 Nov
+                      </td>
+                      <td className="px-4 py-4 text-sm">
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
+                          Due
+                        </span>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 transition">
+                      <td className="px-0 py-4 text-sm text-slate-700">
+                        INV-1040
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        DivCorp
+                      </td>
+                      <td className="px-4 py-4 text-sm text-slate-700">$295</td>
+                      <td className="px-4 py-4 text-sm text-slate-700">
+                        05 Nov
+                      </td>
+                      <td className="px-4 py-4 text-sm">
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white">
+                          Overdue
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Action Buttons */}
