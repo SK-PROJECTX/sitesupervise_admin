@@ -1,47 +1,39 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { StatCard } from "@/components/admin/StatCard";
 
 const revenueCards = [
   {
     title: "MRR (Monthly)",
     value: "$84,500",
     badge: "↑ 12%",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-slate-900 text-white",
-    textClass: "text-white",
-    badgeTextClass: "text-white",
-    corner: "tl",
+    badgeColor: "green" as const,
+    style: "dark" as const,
+    corner: "tl" as const,
   },
   {
     title: "ARR (Annual)",
     value: "$1,014,000",
     badge: "↑ 8%",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-white",
-    textClass: "text-slate-900",
-    badgeTextClass: "text-white",
-    corner: "tr",
+    badgeColor: "green" as const,
+    style: "default" as const,
+    corner: "tr" as const,
   },
   {
     title: "Collected this month",
     value: "$78,200",
     badge: "↓ 3%",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-white",
-    textClass: "text-slate-900",
-    badgeTextClass: "text-white",
-    corner: "bl",
+    badgeColor: "green" as const,
+    style: "default" as const,
+    corner: "bl" as const,
   },
   {
     title: "Outstanding Invoice",
     value: "$12,450",
     badge: "↑ 2%",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-white",
-    textClass: "text-slate-900",
-    badgeTextClass: "text-white",
-    corner: "br",
+    badgeColor: "green" as const,
+    style: "default" as const,
+    corner: "br" as const,
   },
 ];
 
@@ -84,13 +76,6 @@ const subscriptions = [
 ];
 
 export default function BillingPage() {
-  const cornerClassMap: Record<string, string> = {
-    tl: "rounded-3xl rounded-tl-none",
-    tr: "rounded-3xl rounded-tr-none",
-    bl: "rounded-3xl rounded-bl-none",
-    br: "rounded-3xl rounded-br-none",
-  };
-
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
@@ -112,44 +97,15 @@ export default function BillingPage() {
 
           <div className="grid grid-cols-2 gap-6">
             {revenueCards.map((card) => (
-              <div
+              <StatCard
                 key={card.title}
-                className={`
-                  ${card.cardClass}
-                  ${cornerClassMap[card.corner]}
-                  p-8 rounded-3xl shadow-sm border ${
-                    card.cardClass.includes("bg-slate-900")
-                      ? "border-slate-800"
-                      : "border-gray-200"
-                  }
-                  flex flex-col justify-between
-                `}
-              >
-                <div className="flex justify-between items-start mb-6">
-                  <span
-                    className={`text-sm font-medium ${
-                      card.cardClass.includes("bg-slate-900")
-                        ? "text-gray-400"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {card.title}
-                  </span>
-                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300">
-                    <ArrowUpRight size={18} className="text-gray-600" />
-                  </button>
-                </div>
-
-                <div className={`text-4xl font-bold mb-4 ${card.textClass}`}>
-                  {card.value}
-                </div>
-
-                <div
-                  className={`inline-block ${card.badgeClass} ${card.badgeTextClass} text-xs px-3 py-1 rounded-full font-medium w-fit`}
-                >
-                  {card.badge}
-                </div>
-              </div>
+                title={card.title}
+                value={card.value}
+                badge={card.badge}
+                badgeColor={card.badgeColor}
+                style={card.style}
+                corner={card.corner}
+              />
             ))}
           </div>
         </section>
