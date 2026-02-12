@@ -116,7 +116,7 @@ export default function AdminDashboardPage() {
         <div className="space-y-16">
           {/* KEY PLATFORM METRICS & SYSTEM HEALTH SECTION */}
           <section id="platform-metrics">
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 mb-28 ">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-20 xl:gap-3 mb-28 ">
               {/* Key Platform Metrics */}
               <div className="rounded-lg col-span-1">
                 <SectionHeader title="KEY PLATFORM METRICS" />
@@ -212,12 +212,12 @@ export default function AdminDashboardPage() {
               {/* Actions */}
               <div className="mt-10 flex gap-6 ">
                 <Link href="/admin/system-health-monitor">
-                  <Button className="bg-slate-900 text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
+                  <Button className="bg-slate-900 text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
                     View Detailed Health
                   </Button>
                 </Link>
 
-                <Button className="bg-primary text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
+                <Button className="bg-primary text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
                   Run Diagnostics
                 </Button>
               </div>
@@ -410,11 +410,11 @@ export default function AdminDashboardPage() {
 
                     {/* Actions */}
                     <div className="mt-10 flex gap-6 ">
-                      <Button className="bg-slate-900 text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
+                      <Button className="bg-slate-900 text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
                         View All Alerts
                       </Button>
 
-                      <Button className="bg-primary text-white py-4 px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
+                      <Button className="bg-primary text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
                         Configure Alert Rules
                       </Button>
                     </div>
