@@ -235,8 +235,8 @@ export default function AdminDashboardPage() {
                 </h3>
 
                 {/* Table */}
-                <div className="overflow-hidden border border-gray-200 rounded-lg">
-                  <table className="w-full border-collapse">
+                <div className="overflow-x-auto border border-gray-200 rounded-lg">
+                  <table className="w-full border-collapse min-w-[600px]">
                     <thead>
                       <tr className="text-sm text-gray-600">
                         <th className="px-6 py-4 text-left font-semibold border-b border-gray-200">
