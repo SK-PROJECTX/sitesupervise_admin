@@ -12,17 +12,16 @@ import {
   Settings,
   BarChart3,
   Activity,
-  AlertTriangle,
   HelpCircle,
   LogOut,
   MessageCircle,
   BadgeInfo,
   Wallet,
-  HeadphoneOffIcon,
   Headphones,
 } from "lucide-react";
 import { clearAuthTokens } from "../lib/auth";
 import { adminAuthService } from "../lib/services";
+import { Button } from "./ui/Button";
 
 interface SidebarChild {
   label: string;
@@ -129,20 +128,6 @@ const sidebarItems: SidebarItem[] = [
       { label: "Support Analytics", href: "/admin/support/#rules" },
     ],
   },
-
-  // {
-  //   icon: <AlertTriangle className="w-5 h-5" />,
-  //   label: "ALERT CENTER",
-  //   children: [
-  //     { label: "Active Alerts", href: "/admin/alerts/active" },
-  //     { label: "Alert Rules", href: "/admin/alerts/rules" },
-  //     {
-  //       label: "Notification Settings",
-  //       href: "/admin/alerts/notification-settings",
-  //     },
-  //     { label: "Alert Analytics", href: "/admin/alerts/analytics" },
-  //   ],
-  // },
 ];
 
 export default function AdminSidebar({
@@ -193,12 +178,12 @@ export default function AdminSidebar({
 
   return (
     <div
-      className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0f172a] text-white flex flex-col h-screen transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-50 w-72 bg-[var(--color-sidebar-bg)] text-[var(--color-sidebar-text)] flex flex-col h-screen transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+      <div className="p-4 border-b border-[var(--color-sidebar-border)] flex justify-between items-center">
         <div className="flex items-center gap-3">
           {/* Placeholder for logo - replace src with actual logo path */}
           <img
@@ -209,12 +194,16 @@ export default function AdminSidebar({
 
           <div>
             <div className="font-bold text-lg">SITE SUPERVISE</div>
-            <div className="text-xs text-gray-400">SUPER ADMIN DASHBOARD</div>
+            <div className="text-xs text-[var(--color-sidebar-text-muted)]">
+              SUPER ADMIN DASHBOARD
+            </div>
           </div>
         </div>
-        <button
+        <Button
           onClick={onClose}
-          className="md:hidden text-gray-400 hover:text-white"
+          variant="ghost"
+          size="icon"
+          className="md:hidden text-[var(--color-sidebar-text-muted)] hover:text-white hover:bg-transparent"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -230,13 +219,13 @@ export default function AdminSidebar({
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </button>
+        </Button>
       </div>
 
       {/* Main Menu */}
       <div className="flex-1 overflow-y-auto py-4">
         <div className="px-4">
-          <div className="text-xs uppercase text-gray-400 mb-4 tracking-wider">
+          <div className="text-xs uppercase text-[var(--color-sidebar-text-muted)] mb-4 tracking-wider">
             Main Menu
           </div>
           {sidebarItems.map((item) => (
@@ -251,7 +240,9 @@ export default function AdminSidebar({
                   }
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors ${
-                  isParentActive(item) ? "bg-gray-700" : "hover:bg-gray-700/50"
+                  isParentActive(item)
+                    ? "bg-[var(--color-sidebar-active)]"
+                    : "hover:bg-[var(--color-sidebar-hover)]"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -259,19 +250,15 @@ export default function AdminSidebar({
                   {item.href ? (
                     <Link
                       href={item.href}
-                      onClick={() => {
-                        // Prevent default link behavior if we are handling navigation via button click above,
-                        // but actually the Link component inside the button handles it.
-                        // However, the structure is: button -> div -> Link.
-                        // Clicking the button triggers the button onClick.
-                        // Clicking the Link triggers the Link navigation.
-                        // Start by preventing propagation if needed, or just rely on Link.
-                        // Actually, the previous code had Link inside button which is invalid HTML5 but often works in React.
-                        // Let's keep structure but ensure onClose is called.
+                      onClick={(e) => {
+                        e.stopPropagation();
                         handleLinkClick();
                       }}
+                      className="flex-1"
                     >
-                      <span>{item.label}</span>
+                      <span className="text-left w-full inline-block">
+                        {item.label}
+                      </span>
                     </Link>
                   ) : (
                     <span>{item.label}</span>
@@ -301,8 +288,8 @@ export default function AdminSidebar({
                         onClick={handleLinkClick}
                         className={`block px-3 py-1.5 text-sm rounded-lg transition-colors ${
                           isActive
-                            ? "bg-gray-700 text-white"
-                            : "text-gray-300 hover:bg-gray-700/50"
+                            ? "bg-[var(--color-sidebar-active)] text-white"
+                            : "text-[var(--color-sidebar-text-muted)] hover:bg-[var(--color-sidebar-hover)]"
                         }`}
                       >
                         {child.label}
@@ -317,22 +304,23 @@ export default function AdminSidebar({
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-[var(--color-sidebar-border)]">
         <Link
           href="/help"
           onClick={handleLinkClick}
-          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-700/50 transition-colors"
+          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-[var(--color-sidebar-hover)] transition-colors"
         >
           <HelpCircle className="w-5 h-5" />
           <span>Help Center</span>
         </Link>
-        <button
+        <Button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-700/50 transition-colors mt-2 w-full text-left"
+          variant="ghost"
+          className="flex items-center justify-start gap-3 px-3 py-2 text-sm h-auto rounded-lg hover:bg-[var(--color-sidebar-hover)] hover:text-white transition-colors mt-2 w-full text-left"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>
-        </button>
+        </Button>
       </div>
     </div>
   );
