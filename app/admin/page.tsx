@@ -13,7 +13,6 @@ import {
   SlidersHorizontal,
   Folder,
   Download,
-  ArrowUpRight,
 } from "lucide-react";
 import { PageHeader } from "../../components/admin/PageHeader";
 import { Card } from "../../components/ui/Card";
@@ -21,50 +20,40 @@ import { SectionHeader } from "../../components/ui/SectionHeader";
 import { Button } from "../../components/ui/Button";
 import { Badge } from "../../components/ui/Badge";
 
+import { StatCard } from "../../components/admin/StatCard";
+
 const statsCards = [
   {
     title: "Active User",
     value: "1,842",
     badge: "Live",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-white",
-    textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220]",
-    border: "",
-    corner: "br", // bottom-right straight
+    badgeColor: "green" as const,
+    style: "default" as const,
+    corner: "br" as const,
   },
   {
     title: "Live Projects",
     value: "47",
     badge: "Active",
-    badgeClass: "bg-red-500",
-    cardClass: "bg-white",
-    textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220] ",
-    border: "border-2 border-gray-200",
-    corner: "bl", // bottom-left straight
+    badgeColor: "red" as const,
+    style: "outlined" as const,
+    corner: "bl" as const,
   },
   {
     title: "System Health",
     value: "98.7%",
     badge: "Optimal",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-white",
-    textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220] ",
-    border: "border-2 border-gray-200",
-    corner: "tr", // top-right straight
+    badgeColor: "green" as const,
+    style: "outlined" as const,
+    corner: "tr" as const,
   },
   {
     title: "Revenue Today",
     value: "$12,450",
     badge: "+12%",
-    badgeClass: "bg-green-500",
-    cardClass: "bg-white",
-    textClass: "text-gray-900, hover:text-white",
-    cardhoverClass: "hover:bg-[#001220] ",
-    border: "border-2 border-gray-200",
-    corner: "tl", // top-left straight
+    badgeColor: "green" as const,
+    style: "outlined" as const,
+    corner: "tl" as const,
   },
 ];
 
@@ -102,12 +91,6 @@ const systemMetrics = [
 ];
 
 export default function AdminDashboardPage() {
-  const cornerClassMap: Record<string, string> = {
-    br: "rounded-xl rounded-br-none",
-    bl: "rounded-xl rounded-bl-none",
-    tr: "rounded-xl rounded-tr-none",
-    tl: "rounded-xl rounded-tl-none",
-  };
   const services = [
     {
       id: "auth",
@@ -140,46 +123,16 @@ export default function AdminDashboardPage() {
 
                 <div className="grid grid-cols-2 gap-4 mb-6 h-full">
                   {statsCards.map((card) => (
-                    <div
+                    <StatCard
                       key={card.title}
-                      className={`
-                        ${card.cardClass}
-                        ${card.cardhoverClass}
-                       ${card.textClass}
-                        ${card.border}
-                        ${cornerClassMap[card.corner]}
-                        p-6 relative overflow-hidden flex flex-col justify-between
-                      `}
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <span
-                          className={`text-sm ${
-                            card.cardClass.includes("bg-gray-900")
-                              ? "text-gray-400"
-                              : "text-gray-600"
-                          }
-                          `}
-                        >
-                          {card.title}
-                        </span>
-
-                        <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300">
-                          <ArrowUpRight className="w-5 h-5 text-gray-600" />
-                        </button>
-                      </div>
-
-                      <div
-                        className={`text-3xl md:text-4xl xl:text-5xl font-bold mb-2`}
-                      >
-                        {card.value}
-                      </div>
-
-                      <div
-                        className={`inline-block ${card.badgeClass} rounded-full text-white text-xs px-2 py-1 mt-4 w-18 text-center`}
-                      >
-                        {card.badge}
-                      </div>
-                    </div>
+                      title={card.title}
+                      value={card.value}
+                      badge={card.badge}
+                      badgeColor={card.badgeColor}
+                      style={card.style}
+                      corner={card.corner}
+                      className="h-full"
+                    />
                   ))}
                 </div>
               </div>

@@ -164,10 +164,20 @@ export default function AdminSidebar({
   };
 
   const isParentActive = (item: SidebarItem) => {
-    if (!item.children) return pathname === "/admin" || pathname === "/";
-    return item.children.some(
-      (c) => pathname === c.href || pathname.startsWith(c.href + "/"),
-    );
+    if (item.children) {
+      return item.children.some(
+        (c) => pathname === c.href || pathname.startsWith(c.href + "/"),
+      );
+    }
+
+    if (!item.href) return false;
+
+    // Strict match for dashboard to avoid matching /admin/something
+    if (item.href === "/admin") {
+      return pathname === "/admin";
+    }
+
+    return pathname === item.href || pathname.startsWith(item.href + "/");
   };
 
   const handleLinkClick = () => {
