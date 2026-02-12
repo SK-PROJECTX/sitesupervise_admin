@@ -117,58 +117,60 @@ export default function BillingPage() {
           </h2>
 
           <div className="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                    COMPANY
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                    PLAN
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                    USERS
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
-                    STATUS
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {subscriptions.map((sub, index) => (
-                  <tr
-                    key={index}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition"
-                  >
-                    <td className="px-6 py-4 text-sm">
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{sub.icon}</span>
-                        <span className="text-slate-900 font-medium">
-                          {sub.company}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-700">
-                      {sub.plan}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-700">
-                      {sub.users}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                          sub.status === "active"
-                            ? "bg-green-500 text-white"
-                            : "bg-red-500 text-white"
-                        }`}
-                      >
-                        {sub.status === "active" ? "Active" : "Inactive"}
-                      </span>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[800px]">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                      COMPANY
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                      PLAN
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                      USERS
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wide">
+                      STATUS
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {subscriptions.map((sub, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-gray-200 hover:bg-gray-50 transition"
+                    >
+                      <td className="px-6 py-4 text-sm">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">{sub.icon}</span>
+                          <span className="text-slate-900 font-medium">
+                            {sub.company}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-700">
+                        {sub.plan}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-700">
+                        {sub.users}
+                      </td>
+                      <td className="px-6 py-4 text-sm">
+                        <span
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
+                            sub.status === "active"
+                              ? "bg-green-500 text-white"
+                              : "bg-red-500 text-white"
+                          }`}
+                        >
+                          {sub.status === "active" ? "Active" : "Inactive"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
