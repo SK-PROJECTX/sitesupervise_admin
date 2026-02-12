@@ -1,3 +1,11 @@
+"use client";
+
+import { PageHeader } from "../../../components/admin/PageHeader";
+import { Card } from "../../../components/ui/Card";
+import { SectionHeader } from "../../../components/ui/SectionHeader";
+import { Button } from "../../../components/ui/Button";
+import { Badge } from "../../../components/ui/Badge";
+
 export default function UserManagementPage() {
   const users = [
     {
@@ -38,23 +46,20 @@ export default function UserManagementPage() {
   ];
 
   return (
-    <main className="min-h-screen  bg-[#EAEAEA]">
-      <div className="bg-white border-b border-gray-200 px-8 py-6 w-full flex items-center justify-between">
-        <h1 className="text-sm font-semibold text-[#0A1B2E]">
-          User management Console
-        </h1>
-
-        <button className="px-4 py-2 border border-gray-300 bg-white rounded-md text-sm text-gray-700">
+    <main className="min-h-screen bg-[#EAEAEA]">
+      <PageHeader title="User management Console">
+        <Button
+          variant="outline"
+          className="bg-white text-gray-700 border-gray-300"
+        >
           Filter: Active User
-        </button>
-      </div>
+        </Button>
+      </PageHeader>
 
       <section className="px-8 py-10">
-        <h2 className="text-lg font-bold text-[#0A1B2E] mb-6">
-          USER DIRECTORY TABLE
-        </h2>
+        <SectionHeader title="USER DIRECTORY TABLE" />
 
-        <div className="bg-white rounded-3xl p-10 shadow-sm">
+        <Card>
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -83,13 +88,9 @@ export default function UserManagementPage() {
 
                     <td className="px-6 py-5">
                       {u.status === "active" ? (
-                        <span className="inline-flex items-center justify-center bg-green-500 text-white px-3 py-1 rounded-full text-[10px] font-medium">
-                          Active
-                        </span>
+                        <Badge variant="success">Active</Badge>
                       ) : (
-                        <span className="inline-flex items-center justify-center bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-medium">
-                          Idle
-                        </span>
+                        <Badge variant="danger">Idle</Badge>
                       )}
                     </td>
                   </tr>
@@ -97,16 +98,14 @@ export default function UserManagementPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* USER DETAILS PANEL */}
       <section className="px-8 pb-12">
-        <h2 className="text-sm font-bold text-[#0A1B2E] mb-4">
-          USER DETAILS PANEL
-        </h2>
+        <SectionHeader title="USER DETAILS PANEL" className="text-sm" />
 
-        <div className="bg-white rounded-3xl p-10 shadow-sm">
+        <Card>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* User Details */}
             <div>
@@ -146,36 +145,34 @@ export default function UserManagementPage() {
             <h4 className="text-xs font-semibold mb-4">QUICK ACTIONS:</h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Impersonate
-              </button>
-              <button className="bg-blue-600 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-blue-600 text-white h-auto py-3 rounded-xl text-sm hover:bg-blue-700">
                 Reset Password
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 View Activity
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Change Role
-              </button>
-              <button className="bg-blue-600 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-blue-600 text-white h-auto py-3 rounded-xl text-sm hover:bg-blue-700">
                 Suspend Account
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Edit Profile
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* BULK ACTIONS TOOLBAR */}
       <section className="px-8 pb-12">
-        <h2 className="text-sm font-bold text-[#0A1B2E] mb-4">
-          BULK ACTIONS TOOLBAR
-        </h2>
+        <SectionHeader title="BULK ACTIONS TOOLBAR" className="text-sm" />
 
-        <div className="bg-white rounded-3xl p-10 shadow-sm">
+        <Card>
           <div className="mb-8">
             <div className="text-sm text-gray-600 mb-4">
               SELECTED: <span className="font-medium">3 users</span>
@@ -184,24 +181,24 @@ export default function UserManagementPage() {
             <h4 className="text-xs font-semibold mb-3">BULK ACTIONS:</h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Add to Project
-              </button>
-              <button className="bg-blue-600 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-blue-600 text-white h-auto py-3 rounded-xl text-sm hover:bg-blue-700">
                 Assign Role
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Send Notification
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Export Users
-              </button>
-              <button className="bg-blue-600 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-blue-600 text-white h-auto py-3 rounded-xl text-sm hover:bg-blue-700">
                 Deactivate
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Add Tags
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -209,31 +206,31 @@ export default function UserManagementPage() {
             <h4 className="text-xs font-semibold mb-3">USER IMPORT / EXPORT</h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Import from CSV
-              </button>
-              <button className="bg-blue-600 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-blue-600 text-white h-auto py-3 rounded-xl text-sm hover:bg-blue-700">
                 Export to Excel
-              </button>
-              <button className="bg-slate-900 text-white px-4 py-3 rounded-xl text-sm">
+              </Button>
+              <Button className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm">
                 Sync with AD
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* PRIMARY ACTION BAR */}
       <div className="px-8 pb-12 flex flex-wrap gap-4">
-        <button className="bg-slate-900 text-white px-8 py-4 rounded-xl text-sm">
+        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
           Add New User
-        </button>
-        <button className="bg-blue-600 text-white px-8 py-4 rounded-xl text-sm">
+        </Button>
+        <Button className="bg-blue-600 text-white h-auto px-8 py-4 rounded-xl text-sm hover:bg-blue-700">
           Create User Group
-        </button>
-        <button className="bg-slate-900 text-white px-8 py-4 rounded-xl text-sm">
+        </Button>
+        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
           Run User Analytics
-        </button>
+        </Button>
       </div>
     </main>
   );
