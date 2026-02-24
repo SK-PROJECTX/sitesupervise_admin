@@ -1,6 +1,7 @@
 import { ArrowUpRight, Calendar } from "lucide-react";
 import PieChart from "../../../components/PieChart";
 import LineChart from "../../../components/LineChart";
+import { StatCard } from "../../../components/admin/StatCard";
 
 export default function AdminAnalyticsPage() {
   return (
@@ -17,7 +18,6 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-    
       <div className=" px-8 py-10 space-y-8">
         {/* Top stats row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -28,96 +28,44 @@ export default function AdminAnalyticsPage() {
             </h2>
             <div className="grid grid-cols-2 gap-4">
               {/* MAU Card */}
-              <div className="bg-[#0A1B2E] rounded-tl-3xl p-6 shadow-sm">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-400 mb-2">
-                      MAU (Monthly)
-                    </div>
-                    <div className="text-4xl font-bold text-white">1,842</div>
-                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
-                      +2.4%
-                    </div>
-                  </div>
-                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
-                    <ArrowUpRight
-                      size={18}
-                      strokeWidth={2}
-                      className="text-gray-600"
-                    />
-                  </button>
-                </div>
-              </div>
+              <StatCard
+                title="MAU (Monthly)"
+                value="1,842"
+                badge="+2.4%"
+                badgeColor="green"
+                style="dark"
+                corner="tl"
+              />
 
               {/* DAU Card */}
-              <div className="bg-white rounded-tr-3xl p-6 shadow-sm border border-gray-200">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-600 mb-2">
-                      DAU (Daily)
-                    </div>
-                    <div className="text-4xl font-bold text-[#0A1B2E]">847</div>
-                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
-                      +1.1%
-                    </div>
-                  </div>
-                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
-                    <ArrowUpRight
-                      size={18}
-                      strokeWidth={2}
-                      className="text-gray-600"
-                    />
-                  </button>
-                </div>
-              </div>
+              <StatCard
+                title="DAU (Daily)"
+                value="847"
+                badge="+1.1%"
+                badgeColor="green"
+                style="outlined"
+                corner="tr"
+              />
 
               {/* Growth Health Card */}
-              <div className="bg-white rounded-bl-3xl p-6 shadow-sm border border-gray-200">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-600 mb-2">
-                      Growth Health
-                    </div>
-                    <div className="text-4xl font-bold text-[#0A1B2E]">
-                      12.4%
-                    </div>
-                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
-                      Strong
-                    </div>
-          cd        </div>
-                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
-                    <ArrowUpRight
-                      size={18}
-                      strokeWidth={2}
-                      className="text-gray-600"
-                    />
-                  </button>
-                </div>
-              </div>
+              <StatCard
+                title="Growth Health"
+                value="12.4%"
+                badge="Strong"
+                badgeColor="green"
+                style="outlined"
+                corner="bl"
+              />
 
               {/* Engagement Score Card */}
-              <div className="bg-white rounded-br-3xl p-6 shadow-sm border border-gray-200">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray-600 mb-2">
-                      Engagement Score
-                    </div>
-                    <div className="text-4xl font-bold text-[#0A1B2E]">
-                      8.7/10
-                    </div>
-                    <div className="mt-3 inline-block bg-green-500 text-white text-xs px-3 py-1 rounded-full">
-                      High
-                    </div>
-                  </div>
-                  <button className="p-2 rounded-full bg-[#D9D9D9] hover:bg-gray-300 ml-2 flex-shrink-0">
-                    <ArrowUpRight
-                      size={18}
-                      strokeWidth={2}
-                      className="text-gray-600"
-                    />
-                  </button>
-                </div>
-              </div>
+              <StatCard
+                title="Engagement Score"
+                value="8.7/10"
+                badge="High"
+                badgeColor="green"
+                style="outlined"
+                corner="br"
+              />
             </div>
           </div>
 

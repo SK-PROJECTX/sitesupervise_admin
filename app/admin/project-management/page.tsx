@@ -1,6 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { PageHeader } from "../../../components/admin/PageHeader";
+import { Card } from "../../../components/ui/Card";
+import { SectionHeader } from "../../../components/ui/SectionHeader";
+import { Button } from "../../../components/ui/Button";
+import { Badge } from "../../../components/ui/Badge";
 
 interface Project {
   id: number;
@@ -58,11 +63,11 @@ interface MetricCard {
   label: string;
   value: number;
   percentage: number;
-  color: "orange" | "blue" | "gray";
+  color: "orange" | "blue" | "gray" | "green";
 }
 
 const METRICS: MetricCard[] = [
-  { label: "TOTAL PROJECTS", value: 142, percentage: 0, color: "gray" },
+  { label: "TOTAL PROJECTS", value: 142, percentage: 100, color: "green" },
   { label: "ACTIVE PROJECTS", value: 47, percentage: 33, color: "orange" },
   { label: "COMPLETED PROJECTS", value: 82, percentage: 58, color: "blue" },
   { label: "OVERDUE PROJECTS", value: 13, percentage: 9, color: "gray" },
@@ -73,7 +78,7 @@ function ProgressCircle({
   color,
 }: {
   percentage: number;
-  color: "orange" | "blue" | "gray";
+  color: "orange" | "blue" | "gray" | "green";
 }) {
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -82,6 +87,7 @@ function ProgressCircle({
     orange: "#FF6B35",
     blue: "#1E90FF",
     gray: "#D1D5DB",
+    green: "green",
   };
 
   return (
@@ -161,15 +167,16 @@ function ProjectRow({
         </div>
       </td>
       <td className="px-6 py-5 text-sm font-medium text-gray-900">
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+        <Badge
+          variant={project.status === "good" ? "neutral" : "danger"}
+          className={
             project.status === "good"
               ? "bg-blue-100 text-blue-800"
               : "bg-red-100 text-red-800"
-          }`}
+          }
         >
           {project.status === "good" ? "Good" : "Risk"}
-        </span>
+        </Badge>
       </td>
     </tr>
   );
@@ -181,21 +188,21 @@ export default function ProjectManagementPage() {
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
-        <h1 className="text-sm font-semibold text-[#0A1B2E]">
-          Platform Project Management
-        </h1>
-
-        <button className="px-4 py-2 border border-gray-300 bg-white rounded-md text-sm text-gray-700">
+      <PageHeader title="Platform Project Management">
+        <Button
+          variant="outline"
+          className="bg-white text-gray-700 border-gray-300"
+        >
           View: All Active
-        </button>
-      </div>
+        </Button>
+      </PageHeader>
 
       {/* Content */}
       <section className="px-8 py-10" id="analytics">
-        <h2 className="text-sm font-bold text-[#0A1B2E] mb-6">
-          PROJECT PORTFOLIO DASHBOARD
-        </h2>
+        <SectionHeader
+          title="PROJECT PORTFOLIO DASHBOARD"
+          className="text-sm"
+        />
 
         <div className="bg-white rounded-3xl p-0 shadow-sm mb-12 overflow-hidden border border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-200">
@@ -224,11 +231,9 @@ export default function ProjectManagementPage() {
 
       {/* ACTIVE PROJECTS SECTION */}
       <section className="px-8 pb-12" id="active">
-        <h2 className="text-sm font-bold text-[#0A1B2E] mb-4">
-          ACTIVE PROJECTS GRID
-        </h2>
+        <SectionHeader title="ACTIVE PROJECTS GRID" className="text-sm" />
 
-        <div className="bg-white rounded-3xl p-10 shadow-sm">
+        <Card>
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -251,7 +256,7 @@ export default function ProjectManagementPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* PROJECT DETAILS MODAL */}
@@ -305,36 +310,37 @@ export default function ProjectManagementPage() {
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <button className="bg-slate-900 text-white px-4 py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
                     View Analytics
-                  </button>
-                  <button className="bg-blue-600 text-white px-4 py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
+                  </Button>
+                  <Button className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
                     Manage Users
-                  </button>
-                  <button className="bg-slate-900 text-white px-4 py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  </Button>
+                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
                     Download Logs
-                  </button>
-                  <button className="bg-slate-900 text-white px-4 py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  </Button>
+                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
                     Configure
-                  </button>
-                  <button className="bg-blue-600 text-white px-4 py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
+                  </Button>
+                  <Button className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
                     Backup
-                  </button>
-                  <button className="bg-slate-900 text-white px-4 py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  </Button>
+                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
                     Edit Tags
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
 
             {/* Close Button */}
             <div className="mt-8">
-              <button
+              <Button
                 onClick={() => setSelectedProject(null)}
-                className="w-full bg-gray-300 text-gray-800 px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-400"
+                variant="outline"
+                className="w-full bg-gray-300 text-gray-800 h-auto py-3 rounded-lg text-sm font-medium hover:bg-gray-400 border-none"
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -342,11 +348,9 @@ export default function ProjectManagementPage() {
 
       {/* PROJECT TEMPLATE*/}
       <section className="px-8 pb-12" id="templates">
-        <h2 className="text-sm font-bold text-[#0A1B2E] mb-4">
-          PROJECT TEMPLATE
-        </h2>
+        <SectionHeader title="PROJECT TEMPLATE" className="text-sm" />
 
-        <div className="bg-white rounded-3xl p-10 shadow-sm">
+        <Card>
           <div>
             <h4 className="text-sm font-bold text-[#0A1B2E] mb-6 flex items-center gap-2">
               📋 PROJECT TEMPLATES
@@ -360,28 +364,28 @@ export default function ProjectManagementPage() {
             </ul>
 
             <div className="flex gap-4">
-              <button className="bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-medium">
+              <Button className="bg-slate-900 text-white h-auto px-6 py-3 rounded-full text-sm font-medium">
                 Create from Template
-              </button>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-medium">
+              </Button>
+              <Button className="bg-blue-600 text-white h-auto px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700">
                 Save Current as Template
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* PRIMARY ACTION BAR */}
       <div className="px-8 pb-12 flex flex-wrap gap-4">
-        <button className="bg-slate-900 text-white px-8 py-4 rounded-xl text-sm">
+        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
           Create New Project
-        </button>
-        <button className="bg-blue-600 text-white px-8 py-4 rounded-xl text-sm">
+        </Button>
+        <Button className="bg-blue-600 text-white h-auto px-8 py-4 rounded-xl text-sm hover:bg-blue-700">
           Import Project
-        </button>
-        <button className="bg-slate-900 text-white px-8 py-4 rounded-xl text-sm">
+        </Button>
+        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
           Export Project List
-        </button>
+        </Button>
       </div>
     </main>
   );

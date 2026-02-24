@@ -78,16 +78,7 @@ export default function Page() {
       {/* Right side - Form */}
       <div className="flex-1 flex items-center justify-center bg-white px-6 md:px-16 py-12">
         <div className="max-w-3xl w-full">
-          {/* Back to Home Link */}
-          <div className="mb-6">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-[#022C4F] hover:text-[#0F181F] transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Back to Home</span>
-            </Link>
-          </div>
+     
 
           {/* Top right sign-in */}
            <div className="flex md:hidden flex-col items-center justify-center mb-8">
