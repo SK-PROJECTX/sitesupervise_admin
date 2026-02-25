@@ -19,8 +19,7 @@ import {
   Wallet,
   Headphones,
 } from "lucide-react";
-import { clearAuthTokens } from "../lib/auth";
-import { adminAuthService } from "../lib/services";
+import { clearAuthTokens, logout as authLogout } from "../lib/auth";
 import { Button } from "./ui/Button";
 
 interface SidebarChild {
@@ -140,18 +139,22 @@ export default function AdminSidebar({
   // Start with all sections expanded to match the image
   const initialExpanded = sidebarItems.map((i) => i.label);
   const [expandedItems, setExpandedItems] = useState<string[]>(initialExpanded);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
 
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
     try {
-      await adminAuthService.logout();
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
+      await authLogout();
       clearAuthTokens();
       router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
     }
   };
 
@@ -326,10 +329,13 @@ export default function AdminSidebar({
         <Button
           onClick={handleLogout}
           variant="ghost"
-          className="flex items-center justify-start gap-3 px-3 py-2 text-sm h-auto rounded-lg hover:bg-[var(--color-sidebar-hover)] hover:text-white transition-colors mt-2 w-full text-left"
+          disabled={isLoggingOut}
+          className="flex items-center justify-start gap-3 px-3 py-2 text-sm h-auto rounded-lg hover:bg-[var(--color-sidebar-hover)] hover:text-white transition-colors mt-2 w-full text-left disabled:opacity-50"
         >
-          <LogOut className="w-5 h-5" />
-          <span>Logout</span>
+          <LogOut
+            className={`w-5 h-5 ${isLoggingOut ? "animate-pulse" : ""}`}
+          />
+          <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
         </Button>
       </div>
     </div>
