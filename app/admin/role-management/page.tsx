@@ -58,7 +58,7 @@ export default function RoleManagementPage() {
     setEditedPermissions(role.permissions || []);
   };
 
-  const togglePermission = (module: string, field: string) => {
+  const togglePermission = (module: string, field: keyof Permission) => {
     setEditedPermissions((prev) =>
       prev.map((p) => (p.module === module ? { ...p, [field]: !p[field] } : p)),
     );
