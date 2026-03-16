@@ -32,6 +32,7 @@ export default function Page() {
     try {
       const response = await adminAuthService.login(formData.email, formData.password);
       
+      console.log('Login response:', response); // Debug log
       console.log('Login response:', response.data); // Debug log
       
       // Access user data from the nested structure
