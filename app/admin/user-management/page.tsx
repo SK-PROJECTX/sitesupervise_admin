@@ -68,7 +68,9 @@ export default function UserManagementPage() {
   };
 
   const handleResetPassword = (user: any) => {
-    alert(`Password reset initiation for ${user.username}. An email was dispatched.`);
+    alert(
+      `Password reset initiation for ${user.username}. An email was dispatched.`,
+    );
   };
 
   const handleImpersonate = (user: any) => {
@@ -133,10 +135,12 @@ export default function UserManagementPage() {
                       </td>
 
                       <td className="px-6 py-5">
-                        {u.status === "active" ? (
+                        {u.status?.toLowerCase() === "active" ? (
                           <Badge variant="success">Active</Badge>
                         ) : (
-                          <Badge variant="danger">Disabled</Badge>
+                          <Badge variant="danger">
+                            {u.status || "Disabled"}
+                          </Badge>
                         )}
                       </td>
                     </tr>
@@ -193,12 +197,12 @@ export default function UserManagementPage() {
                     <span className="font-medium text-gray-400">Status:</span>
                     <span
                       className={
-                        selectedUser.status === "active"
+                        selectedUser.status?.toLowerCase() === "active"
                           ? "text-green-600 font-bold"
                           : "text-red-600 font-bold"
                       }
                     >
-                      {selectedUser.status.toUpperCase()}
+                      {selectedUser.status?.toUpperCase() || "DISABLED"}
                     </span>
                   </li>
                 </ul>
@@ -224,13 +228,13 @@ export default function UserManagementPage() {
                   >
                     Delete Account
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => handleResetPassword(selectedUser)}
                     className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm"
                   >
                     Reset Password
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => handleImpersonate(selectedUser)}
                     className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm"
                   >

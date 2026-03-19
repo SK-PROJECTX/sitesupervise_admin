@@ -6,9 +6,9 @@ export const setAuthTokens = (
   user: any,
 ) => {
   // Store in localStorage for API calls
-  console.log("accessToken", accessToken);
-  console.log("refreshToken", refreshToken);
-  console.log("user", user);
+  // console.log("accessToken", accessToken);
+  // console.log("refreshToken", refreshToken);
+  // console.log("user", user);
   localStorage.setItem("admin_access_token", accessToken);
   localStorage.setItem("admin_refresh_token", refreshToken);
   localStorage.setItem("admin_user", JSON.stringify(user));

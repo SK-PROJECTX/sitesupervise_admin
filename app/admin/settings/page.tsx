@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Button } from "../../../components/ui/Button";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,45 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
 }
 
 export default function AdminSettingsIndex() {
+  const handleExport = () => {
+    // Current configuration snapshot
+    const config = {
+      general: {
+        platformName: "Sitesupervise Pro",
+        supportEmail: "support@sitesupervise.com",
+        timezone: "UTC-06:00 Eastern Time",
+        dateFormat: "MM/DD/YYYY",
+      },
+      performance: {
+        arPriority: "Balanced",
+        aiRefresh: "Daily",
+        cacheDuration: "24 hours",
+        backupFrequency: "Every 6 hours",
+      },
+      storage: {
+        maxProjectSize: "1000GB",
+        maxFileSize: "2GB",
+        retentionPolicy: "Active 7 years, archived 3 years",
+        autoCleanup: "Enabled",
+      },
+      exportTimestamp: new Date().toISOString(),
+    };
+
+    const blob = new Blob([JSON.stringify(config, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `sitesupervise-config-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
@@ -68,9 +108,7 @@ export default function AdminSettingsIndex() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <label className="w-32 text-sm text-gray-700">
-                    Timezone
-                  </label>
+                  <label className="w-32 text-sm text-gray-700">Timezone</label>
                   <input
                     type="text"
                     defaultValue="UTC-06:00 Eastern Time"
@@ -372,29 +410,35 @@ export default function AdminSettingsIndex() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 mt-8">
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
+          <div className="flex gap-4 mt-12 pb-6">
+            <Button
+              className="bg-slate-900 text-white rounded-xl px-8 py-6 h-auto text-sm font-semibold hover:bg-slate-800 shadow-md transition-all active:scale-95"
+              onClick={() => alert("Settings diagnostics initiating...")}
+            >
               Test All Settings
-            </button>
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+            </Button>
+            <Button
+              variant="outline"
+              className="border-blue-200 text-blue-600 bg-white rounded-xl px-8 py-6 h-auto text-sm font-semibold hover:bg-blue-50 shadow-sm transition-all active:scale-95"
+              onClick={() => {
+                if (
+                  confirm(
+                    "Are you sure you want to reset all platform settings to their default factory values?",
+                  )
+                ) {
+                  alert("Settings reverted to system defaults.");
+                }
+              }}
+            >
               Reset to Defaults
-            </button>
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
-              Export Configuration
-            </button>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4 mt-8">
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
-              Test All Settings
-            </button>
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-              Reset to Defaults
-            </button>
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
-              Export Configuration
-            </button>
+            </Button>
+            <Button
+              className="bg-primary text-white rounded-xl px-8 py-6 h-auto text-sm font-semibold hover:bg-primary/90 shadow-lg transition-all active:scale-95 flex items-center gap-2"
+              onClick={handleExport}
+            >
+              <span>Download Config</span>
+              <span className="text-xs opacity-70">(JSON)</span>
+            </Button>
           </div>
         </div>
 

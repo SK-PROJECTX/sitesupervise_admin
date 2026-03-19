@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -143,6 +143,23 @@ export default function AdminSidebar({
 
   const pathname = usePathname();
   const router = useRouter();
+  const [currentHash, setCurrentHash] = useState(
+    typeof window !== "undefined" ? window.location.hash : "",
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    // Initial sync for pathname changes
+    handleHashChange();
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, [pathname]);
 
   const handleLogout = async () => {
     if (isLoggingOut) return;
@@ -166,21 +183,35 @@ export default function AdminSidebar({
     );
   };
 
-  const isParentActive = (item: SidebarItem) => {
-    if (item.children) {
-      return item.children.some(
-        (c) => pathname === c.href || pathname.startsWith(c.href + "/"),
-      );
-    }
+  const isItemActive = (href?: string) => {
+    if (!href) return false;
 
-    if (!item.href) return false;
+    const [targetPath, targetHash] = href.split("#");
+    const normalizedTargetHash = targetHash ? `#${targetHash}` : "";
 
     // Strict match for dashboard to avoid matching /admin/something
-    if (item.href === "/admin") {
-      return pathname === "/admin";
+    if (href === "/admin") {
+      return pathname === "/admin" && !currentHash;
     }
 
-    return pathname === item.href || pathname.startsWith(item.href + "/");
+    if (targetHash) {
+      // If href has a hash, both path and hash must match
+      return pathname === targetPath && currentHash === normalizedTargetHash;
+    }
+
+    // Default path matching
+    return (
+      pathname === targetPath ||
+      (pathname.startsWith(targetPath + "/") && targetPath !== "/admin")
+    );
+  };
+
+  const isParentActive = (item: SidebarItem) => {
+    if (item.children) {
+      return item.children.some((c) => isItemActive(c.href));
+    }
+
+    return isItemActive(item.href);
   };
 
   const handleLinkClick = () => {
@@ -234,11 +265,10 @@ export default function AdminSidebar({
           </svg>
         </Button>
       </div>
-
       {/* Main Menu */}
-```tsx
+      ```tsx
       <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
-```
+        ```
         <div className="px-4">
           <div className="text-xs uppercase text-[var(--color-sidebar-text-muted)] mb-4 tracking-wider">
             Main Menu
@@ -293,9 +323,7 @@ export default function AdminSidebar({
               {item.children && expandedItems.includes(item.label) && (
                 <div className="mt-1 ml-8 space-y-1">
                   {item.children.map((child) => {
-                    const isActive =
-                      pathname === child.href ||
-                      pathname.startsWith(child.href + "/");
+                    const isActive = isItemActive(child.href);
                     return (
                       <Link
                         key={child.href}
@@ -317,7 +345,6 @@ export default function AdminSidebar({
           ))}
         </div>
       </div>
-
       {/* Footer */}
       <div className="p-4 border-t border-[var(--color-sidebar-border)]">
         <Link
