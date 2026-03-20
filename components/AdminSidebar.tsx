@@ -236,7 +236,9 @@ export default function AdminSidebar({
       </div>
 
       {/* Main Menu */}
-      <div className="flex-1 overflow-y-auto py-4">
+```tsx
+      <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
+```
         <div className="px-4">
           <div className="text-xs uppercase text-[var(--color-sidebar-text-muted)] mb-4 tracking-wider">
             Main Menu
