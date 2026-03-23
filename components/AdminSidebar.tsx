@@ -95,13 +95,13 @@ const sidebarItems: SidebarItem[] = [
     icon: <Activity className="w-5 h-5" />,
     label: "SYSTEM HEALTH",
     children: [
-      { label: "Health Monitor", href: "/admin/health/monitor" },
-      { label: "Service Status", href: "/admin/health/service-status" },
+      { label: "Health Monitor", href: "/admin/system-health" },
+      { label: "Service Status", href: "/admin/system-health#service-status" },
       {
-        label: "Database Management",
-        href: "/admin/health/database-management",
+        label: "Maintainance & History",
+        href: "/admin/system-health#maintainance-history",
       },
-      { label: "Backup & Restore", href: "/admin/health/backup-restore" },
+      { label: "Backup & Restore", href: "/admin/system-health#backup-restore" },
     ],
   },
   {
@@ -266,9 +266,7 @@ export default function AdminSidebar({
         </Button>
       </div>
       {/* Main Menu */}
-      ```tsx
       <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
-        ```
         <div className="px-4">
           <div className="text-xs uppercase text-[var(--color-sidebar-text-muted)] mb-4 tracking-wider">
             Main Menu

@@ -15,6 +15,7 @@ import { PageHeader } from "../../components/admin/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { SectionHeader } from "../../components/ui/SectionHeader";
 import { Button } from "../../components/ui/Button";
+import { GeneralModal } from "../../components/admin/GeneralModal";
 
 import { StatCard } from "../../components/admin/StatCard";
 import { useActiveAlerts } from "../../lib/hooks";
@@ -90,6 +91,62 @@ const systemMetrics = [
 export default function AdminDashboardPage() {
   const { alerts, count, fetchActiveAlerts, dismissAlert, loading } =
     useActiveAlerts();
+
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleRunDiagnostics = () => {
+    openModal({
+      title: "System Diagnostics",
+      description:
+        "Running comprehensive platform diagnostics...\n\n• Checking API availability\n• Verifying Database integrity\n• Testing AI Inference latency\n• Validating AR Scan processing\n\nStatus: All systems optimal. No issues detected.",
+      type: "success",
+      actionLabel: "View Full Report",
+      onAction: () => {
+        closeModal();
+        // Here you could navigate to a detailed report or download it
+      },
+    });
+  };
+
+  const handleExportLogs = () => {
+    openModal({
+      title: "Export Activity Logs",
+      description:
+        "Select your preferred format for exporting the platform activity logs for the last 30 days.",
+      type: "question",
+      actionLabel: "Generate CSV",
+      onAction: () => {
+        closeModal();
+      },
+    });
+  };
+
+  const handleFilter = (type: string) => {
+    openModal({
+      title: `Filter by ${type}`,
+      description: `Select a ${type.toLowerCase()} to filter the activity feed results. This feature is being tuned for your specific needs.`,
+      type: "info",
+    });
+  };
 
   useEffect(() => {
     fetchActiveAlerts();
@@ -219,13 +276,16 @@ export default function AdminDashboardPage() {
 
               {/* Actions */}
               <div className="mt-10 flex gap-6 ">
-                <Link href="/admin/system-health-monitor">
+                <Link href="/admin/system-health">
                   <Button className="bg-slate-900 text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
                     View Detailed Health
                   </Button>
                 </Link>
 
-                <Button className="bg-primary text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
+                <Button
+                  onClick={handleRunDiagnostics}
+                  className="bg-primary text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition"
+                >
                   Run Diagnostics
                 </Button>
               </div>
@@ -295,7 +355,10 @@ export default function AdminDashboardPage() {
                   <div className="space-y-4">
                     {/* Row 1 */}
                     <div className="flex gap-4">
-                      <button className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52">
+                      <button
+                        onClick={() => handleFilter("User Type")}
+                        className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52"
+                      >
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4" />
                           <span>User Type</span>
@@ -303,7 +366,10 @@ export default function AdminDashboardPage() {
                         <SlidersHorizontal className="w-4 h-4 text-gray-400" />
                       </button>
 
-                      <button className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52">
+                      <button
+                        onClick={() => handleFilter("Project")}
+                        className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52"
+                      >
                         <div className="flex items-center gap-2">
                           <Layers className="w-4 h-4" />
                           <span>Project</span>
@@ -311,7 +377,10 @@ export default function AdminDashboardPage() {
                         <SlidersHorizontal className="w-4 h-4 text-gray-400" />
                       </button>
 
-                      <button className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52">
+                      <button
+                        onClick={() => handleFilter("Module")}
+                        className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52"
+                      >
                         <div className="flex items-center gap-2">
                           <Boxes className="w-4 h-4" />
                           <span>Module</span>
@@ -322,7 +391,10 @@ export default function AdminDashboardPage() {
 
                     {/* Row 2 */}
                     <div className="flex gap-4">
-                      <button className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52">
+                      <button
+                        onClick={() => handleFilter("Search")}
+                        className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52"
+                      >
                         <div className="flex items-center gap-2">
                           <Search className="w-4 h-4" />
                           <span>Search Activity</span>
@@ -330,7 +402,10 @@ export default function AdminDashboardPage() {
                         <SlidersHorizontal className="w-4 h-4 text-gray-400" />
                       </button>
 
-                      <button className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52">
+                      <button
+                        onClick={handleExportLogs}
+                        className="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 w-52"
+                      >
                         <div className="flex items-center gap-2">
                           <Upload className="w-4 h-4" />
                           <span>Export Logs</span>
@@ -404,7 +479,19 @@ export default function AdminDashboardPage() {
                             {alert.formatted_message}
                           </div>
                           <div className="flex gap-2">
-                            <Button className="px-3 py-1 bg-gray-900 text-white text-xs h-auto rounded hover:bg-gray-800">
+                            <Button
+                              onClick={() =>
+                                openModal({
+                                  title: `Action for Alert: ${alert.title}`,
+                                  description: `Recommended Action: ${
+                                    (alert as any).suggested_actions ||
+                                    "No immediate action required. Monitor system logs for further updates."
+                                  }`,
+                                  type: "info",
+                                })
+                              }
+                              className="px-3 py-1 bg-gray-900 text-white text-xs h-auto rounded hover:bg-gray-800"
+                            >
                               Action
                             </Button>
                             <Button
@@ -420,11 +507,31 @@ export default function AdminDashboardPage() {
                   </div>
                   {/* Actions */}
                   <div className="mt-10 flex gap-6 ">
-                    <Button className="bg-slate-900 text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition">
+                    <Button
+                      onClick={() =>
+                        openModal({
+                          title: "Alert History",
+                          description:
+                            "Viewing all historical alerts and notifications. This page is under construction to provide better historical insights.",
+                          type: "info",
+                        })
+                      }
+                      className="bg-slate-900 text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-slate-800 transition"
+                    >
                       View All Alerts
                     </Button>
 
-                    <Button className="bg-primary text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition">
+                    <Button
+                      onClick={() =>
+                        openModal({
+                          title: "Alert Rules Configuration",
+                          description:
+                            "Configure threshold rules for triggering system alerts. This section will allow you to customize email and SMS notifications.",
+                          type: "question",
+                        })
+                      }
+                      className="bg-primary text-white py-4 px-4 md:px-8 xl:px-16 h-auto rounded-xl text-sm font-medium hover:bg-primary/80 transition"
+                    >
                       Configure Alert Rules
                     </Button>
                   </div>
@@ -434,6 +541,16 @@ export default function AdminDashboardPage() {
           </section>
         </div>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </div>
   );
 }

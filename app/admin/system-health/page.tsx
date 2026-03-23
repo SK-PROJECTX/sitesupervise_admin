@@ -1,6 +1,18 @@
 "use client";
 
 import { ToggleRight } from "lucide-react";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  ChartOptions,
+  ChartData,
+} from "chart.js";
+import { Pie } from "react-chartjs-2";
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function CircularProgress({
   percentage,
@@ -201,58 +213,51 @@ export default function SystemHealthMonitorPage() {
         </div>
 
         {/* Service Dependency Map Section */}
-        <div className="mt-8">
+        <div id="service-status" className="mt-8">
           <h2 className="text-2xl font-bold text-[#0A1B2E] uppercase tracking-wide mb-6">
             SERVICE DEPENDENCY MAP
           </h2>
 
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-200">
             <div className="grid grid-cols-3 gap-8">
-              {/* Left: Concentric circles diagram */}
-              <div className="flex items-center justify-center col-span-1">
-                <svg
-                  width={280}
-                  height={280}
-                  viewBox="0 0 280 280"
-                  className="drop-shadow-sm"
-                >
-                  {/* Outer red ring */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={120}
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth="20"
-                    opacity="0.8"
-                  />
-                  {/* Middle green ring */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={80}
-                    fill="none"
-                    stroke="#22c55e"
-                    strokeWidth="20"
-                    opacity="0.8"
-                  />
-                  {/* Inner yellow circle (mostly filled) */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={45}
-                    fill="#eab308"
-                    opacity="0.9"
-                  />
-                  {/* Light pink overlay on green */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={80}
-                    fill="#fce7f3"
-                    opacity="0.3"
-                  />
-                </svg>
+              {/* Left: Professional Pie Chart */}
+              <div className="flex items-center justify-center col-span-1 h-[280px]">
+                <Pie
+                  data={
+                    {
+                      labels: ["Healthy", "Warning", "Critical"],
+                      datasets: [
+                        {
+                          data: [65, 20, 15],
+                          backgroundColor: ["#22c55e", "#eab308", "#ef4444"],
+                          borderColor: ["#ffffff", "#ffffff", "#ffffff"],
+                          borderWidth: 2,
+                          hoverOffset: 4,
+                        },
+                      ],
+                    } as ChartData<"pie">
+                  }
+                  options={
+                    {
+                      plugins: {
+                        legend: {
+                          display: false,
+                        },
+                        tooltip: {
+                          enabled: true,
+                          backgroundColor: "#0A1B2E",
+                          titleFont: { size: 14, weight: "bold" },
+                          bodyFont: { size: 13 },
+                          padding: 12,
+                          cornerRadius: 8,
+                          displayColors: true,
+                        },
+                      },
+                      maintainAspectRatio: false,
+                      cutout: "0%", // Set to a value > 0 for a doughnut chart
+                    } as ChartOptions<"pie">
+                  }
+                />
               </div>
 
               {/* Right: Legend and filters */}
@@ -302,7 +307,7 @@ export default function SystemHealthMonitorPage() {
         </div>
 
         {/* Alert History & Forecast Section */}
-        <div className="mt-8">
+        <div id="maintainance-history" className="mt-8">
           <h2 className="text-2xl font-bold text-[#0A1B2E] uppercase tracking-wide mb-6">
             ALERT HISTORY & FORECAST
           </h2>
@@ -374,7 +379,7 @@ export default function SystemHealthMonitorPage() {
         </div>
 
         {/* Maintenance Controls Section */}
-        <div className="mt-8 mb-16">
+        <div id="backup-restore" className="mt-8 mb-16">
           <h2 className="text-2xl font-bold text-[#0A1B2E] uppercase tracking-wide mb-6">
             MAINTENANCE CONTROLS
           </h2>
