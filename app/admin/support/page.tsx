@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 interface Ticket {
   id: string;
@@ -21,6 +22,26 @@ interface Ticket {
 
 export default function SupportCenterPage() {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const tickets: Ticket[] = [
     {
@@ -200,13 +221,47 @@ export default function SupportCenterPage() {
                 AI SUPPORT METRICS
               </h3>
               <div className="flex flex-wrap gap-4">
-                <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "AI Support Agent",
+                      description:
+                        "Activating the autonomous support responder. AI will handle initial ticket triage and provide immediate solutions for common technical issues.",
+                      type: "question",
+                      actionLabel: "Enable Agent",
+                      onAction: () => closeModal(),
+                    })
+                  }
+                  className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                >
                   Enable AI Auto-responder
                 </button>
-                <button className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "Intelligence Training",
+                      description:
+                        "Initiating deep-learning training on historical ticket data. This will improve AI response accuracy and context awareness.",
+                      type: "info",
+                      actionLabel: "Start Training",
+                      onAction: () => closeModal(),
+                    })
+                  }
+                  className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                >
                   Train AI on Tickets
                 </button>
-                <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "Smart Recommendations",
+                      description:
+                        "Accessing AI-generated resolution strategies for current pending tickets. High probability solutions are highlighted based on historical success.",
+                      type: "info",
+                    })
+                  }
+                  className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                >
                   View AI Suggestions for Client Issues
                 </button>
               </div>
@@ -215,13 +270,49 @@ export default function SupportCenterPage() {
 
           {/* Bottom Action Buttons */}
           <div className="mt-8 flex gap-4">
-            <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+            <button
+              onClick={() =>
+                openModal({
+                  title: "New Support Ticket",
+                  description:
+                    "Manually initialize a platform support request. You can assign priority levels and attach relevant documentation or system logs.",
+                  type: "question",
+                  actionLabel: "Create Ticket",
+                  onAction: () => closeModal(),
+                })
+              }
+              className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+            >
               Create New Ticket
             </button>
-            <button className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+            <button
+              onClick={() =>
+                openModal({
+                  title: "Inventory Logistics",
+                  description:
+                    "Reviewing and managing hardware replacement requests and consignment tracking for field equipment.",
+                  type: "info",
+                  actionLabel: "View Logistics",
+                  onAction: () => closeModal(),
+                })
+              }
+              className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+            >
               View or Consignment Issues
             </button>
-            <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+            <button
+              onClick={() =>
+                openModal({
+                  title: "Service Desk Report",
+                  description:
+                    "Compiling support performance metrics, ticket velocity, and user satisfaction ratings for the current month.",
+                  type: "success",
+                  actionLabel: "Download Report",
+                  onAction: () => closeModal(),
+                })
+              }
+              className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+            >
               Generate Support Report
             </button>
           </div>
@@ -320,22 +411,99 @@ export default function SupportCenterPage() {
                   ACTIONS:
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
-                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: `Reply to ${selectedTicket.id}`,
+                        description: `Drafting a secure response to ${selectedTicket.user}. You can use AI-generated templates for faster resolution.`,
+                        type: "question",
+                        actionLabel: "Open Editor",
+                        onAction: () => {
+                          closeModal();
+                          setSelectedTicket(null);
+                        },
+                      })
+                    }
+                    className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                  >
                     Reply
                   </button>
-                  <button className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Voice Communication",
+                        description: `Initiating an encrypted voice call with ${selectedTicket.user} (${selectedTicket.userEmail}).`,
+                        type: "info",
+                        actionLabel: "Start Call",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                  >
                     Call User
                   </button>
-                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Management Escalation",
+                        description: `Escalating Ticket ${selectedTicket.id} to level 2 support for specialized technical analysis.`,
+                        type: "warning",
+                        actionLabel: "Confirm Escalation",
+                        onAction: () => {
+                          closeModal();
+                          setSelectedTicket(null);
+                        },
+                      })
+                    }
+                    className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                  >
                     Escalate
                   </button>
-                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Ticket Resolution",
+                        description: `Marking ${selectedTicket.id} as resolved. This will archive the thread and notify the user of the resolution status.`,
+                        type: "success",
+                        actionLabel: "Confirm Resolution",
+                        onAction: () => {
+                          closeModal();
+                          setSelectedTicket(null);
+                        },
+                      })
+                    }
+                    className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                  >
                     Resolve
                   </button>
-                  <button className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Documentation Upload",
+                        description:
+                          "Attach supplemental files, logs, or screenshots to this support thread for technical review.",
+                        type: "info",
+                        actionLabel: "Select Files",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                  >
                     Attach File
                   </button>
-                  <button className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Follow-up Reminder",
+                        description:
+                          "Set a synchronization point for this ticket. You will be notified if no user activity is detected within the specified interval.",
+                        type: "question",
+                        actionLabel: "Schedule",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                  >
                     Set Reminder
                   </button>
                 </div>
@@ -344,6 +512,16 @@ export default function SupportCenterPage() {
           </div>
         </div>
       )}
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }

@@ -484,7 +484,8 @@ export default function AdminDashboardPage() {
                                 openModal({
                                   title: `Action for Alert: ${alert.title}`,
                                   description: `Recommended Action: ${
-                                    (alert as any).suggested_actions ||
+                                    (alert as { suggested_actions?: string })
+                                      .suggested_actions ||
                                     "No immediate action required. Monitor system logs for further updates."
                                   }`,
                                   type: "info",

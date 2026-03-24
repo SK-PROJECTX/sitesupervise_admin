@@ -18,6 +18,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 const THREADS = [
   {
@@ -51,6 +52,27 @@ export default function MessagesPage() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [message, setMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
@@ -123,6 +145,16 @@ export default function MessagesPage() {
               <input
                 type="text"
                 placeholder="Search threads..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    openModal({
+                      title: "Thread Search",
+                      description:
+                        "The global communication index is being optimized. Deep-search across all project archives will be available shortly.",
+                      type: "info",
+                    });
+                  }
+                }}
                 className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
@@ -179,7 +211,19 @@ export default function MessagesPage() {
               Safety Alerts
             </h3>
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 text-[#021422] text-left transition-all">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "HSE Critical Alert",
+                    description:
+                      "ALERT DETAILS: Potential fall hazard identified at Grid B5, Level 4. AI vision detected missing guardrails in the latest AR scan.\n\nRECOMMENDED ACTION: Dispatch HSE officer for immediate inspection.",
+                    type: "warning",
+                    actionLabel: "Acknowledge Alert",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 text-[#021422] text-left transition-all"
+              >
                 <div className="p-2 rounded-lg bg-red-50 text-red-600">
                   <AlertTriangle size={18} />
                 </div>
@@ -219,10 +263,34 @@ export default function MessagesPage() {
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-400">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "AR Scan Viewer",
+                    description:
+                      "Initializing high-fidelity 3D scan viewer for Grid B5. This module allows you to overlay architectural BIM models directly onto field captures.",
+                    type: "info",
+                    actionLabel: "Launch Viewer",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="p-2 hover:bg-gray-100 rounded-lg text-gray-400"
+              >
                 <Scan size={20} />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-400">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Thread Configuration",
+                    description:
+                      "Manage participants, notification priority, and archival settings for this communication context.",
+                    type: "question",
+                    actionLabel: "Settings",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="p-2 hover:bg-gray-100 rounded-lg text-gray-400"
+              >
                 <MoreHorizontal size={20} />
               </button>
             </div>
@@ -320,7 +388,19 @@ export default function MessagesPage() {
                 <span className="text-blue-500">Secure Channel</span>
               </div>
               <div className="flex items-end gap-2 bg-gray-50 border border-gray-100 rounded-2xl p-2 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white transition-all shadow-inner">
-                <button className="p-2.5 text-gray-400 hover:text-blue-600 transition-colors">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "Digital Asset Attachment",
+                      description:
+                        "Select files to attach to this thread. Supported: .PDF, .DWG, .JPG, .CSV, and AR Snapshot packages.",
+                      type: "info",
+                      actionLabel: "Select Files",
+                      onAction: () => closeModal(),
+                    })
+                  }
+                  className="p-2.5 text-gray-400 hover:text-blue-600 transition-colors"
+                >
                   <Paperclip size={20} />
                 </button>
                 <textarea
@@ -351,6 +431,16 @@ export default function MessagesPage() {
           </footer>
         </main>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </div>
   );
 }

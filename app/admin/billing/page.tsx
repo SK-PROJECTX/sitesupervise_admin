@@ -1,6 +1,8 @@
 "use client";
 
 import { StatCard } from "@/components/admin/StatCard";
+import { useState } from "react";
+import { GeneralModal } from "@/components/admin/GeneralModal";
 
 const revenueCards = [
   {
@@ -76,6 +78,26 @@ const subscriptions = [
 ];
 
 export default function BillingPage() {
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
@@ -255,10 +277,34 @@ export default function BillingPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-4 pt-8 border-t border-gray-200">
-              <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Plan Configuration",
+                    description:
+                      "Accessing the global plan editor. You can modify pricing, feature sets, and resource limits for the Basic, Professional, and Enterprise tiers.",
+                    type: "question",
+                    actionLabel: "Open Editor",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+              >
                 Edit Plans
               </button>
-              <button className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Custom Plan Architect",
+                    description:
+                      "Design a bespoke subscription tier for high-volume enterprise clients. You can specify exact resource quotas and dedicated support levels.",
+                    type: "info",
+                    actionLabel: "Launch Architect",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+              >
                 Create Custom Plan
               </button>
             </div>
@@ -363,19 +409,65 @@ export default function BillingPage() {
 
             {/* Action Buttons */}
             <div className="px-8 py-6 flex gap-4 bg-gray-50">
-              <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Revenue Analysis",
+                    description:
+                      "Aggregating financial data for the current fiscal period. The report will include MRR growth, churn analysis, and payment success rates.",
+                    type: "success",
+                    actionLabel: "Generate Report",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+              >
                 Run Revenue Report
               </button>
-              <button className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Financial Forecasting",
+                    description:
+                      "Running predictive models for next quarter's revenue based on current exponential growth and seasonal trends. AI confidence: 94%.",
+                    type: "info",
+                    actionLabel: "View Forecast",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+              >
                 Forcast Next Quarter
               </button>
-              <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Discount Management",
+                    description:
+                      "Manage active coupon codes and legacy discounts. You can also generate one-time bulk credits for support resolutions.",
+                    type: "question",
+                    actionLabel: "Manage Credits",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+              >
                 Manage Discounts
               </button>
             </div>
           </div>
         </section>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }
