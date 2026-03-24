@@ -2,8 +2,30 @@ import { ArrowUpRight, Calendar } from "lucide-react";
 import PieChart from "../../../components/PieChart";
 import LineChart from "../../../components/LineChart";
 import { StatCard } from "../../../components/admin/StatCard";
+import { useState } from "react";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 export default function AdminAnalyticsPage() {
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       <div className="bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
@@ -11,7 +33,17 @@ export default function AdminAnalyticsPage() {
           Platform Analytics & Reporting
         </h1>
         <div>
-          <button className="px-4 py-2 border border-gray-300 bg-white rounded text-sm flex items-center gap-2 hover:bg-gray-50">
+          <button
+            onClick={() =>
+              openModal({
+                title: "Analytics Timeframe",
+                description:
+                  "Adjust the reporting period for the entire dashboard. You can select custom ranges or compare against previous periods.",
+                type: "info",
+              })
+            }
+            className="px-4 py-2 border border-gray-300 bg-white rounded text-sm flex items-center gap-2 hover:bg-gray-50"
+          >
             <Calendar size={16} />
             Date Range: This Month
           </button>
@@ -221,13 +253,47 @@ export default function AdminAnalyticsPage() {
             </div>
 
             <div className="mt-6 flex gap-3">
-              <button className="px-6 py-3 bg-slate-900 text-white rounded">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Report Generation",
+                    description:
+                      "Compiling data and generating your Performance Report for 'This Month' in PDF format. This might take a few moments.",
+                    type: "success",
+                    actionLabel: "Download PDF",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-6 py-3 bg-slate-900 text-white rounded hover:bg-slate-800"
+              >
                 Generate Now
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Schedule Automated Report",
+                    description:
+                      "Configure recurring report delivery to your email. You can customize participants, frequency, and content depth.",
+                    type: "question",
+                    actionLabel: "Set Schedule",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
                 Schedule New Report
               </button>
-              <button className="px-6 py-3 bg-white border border-gray-200 rounded">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Report Repository",
+                    description:
+                      "Accessing all previously generated reports. You can download, share, or delete historical reports from this archive.",
+                    type: "info",
+                  })
+                }
+                className="px-6 py-3 bg-white border border-gray-200 rounded hover:bg-gray-50"
+              >
                 View Report History
               </button>
             </div>
@@ -236,17 +302,63 @@ export default function AdminAnalyticsPage() {
 
         {/* Footer action buttons */}
         <section className="flex gap-4 mt-6">
-          <button className="px-6 py-3 bg-slate-900 text-white rounded">
+          <button
+            onClick={() =>
+              openModal({
+                title: "Full Data Export",
+                description:
+                  "Exporting all platform raw data for 'This Month'. This include user metrics, system logs, and project metadata.",
+                type: "warning",
+                actionLabel: "Confirm Export",
+                onAction: () => closeModal(),
+              })
+            }
+            className="px-6 py-3 bg-slate-900 text-white rounded hover:bg-slate-800"
+          >
             Export All Data
           </button>
-          <button className="px-6 py-3 bg-blue-600 text-white rounded">
+          <button
+            onClick={() =>
+              openModal({
+                title: "Comparative Analysis",
+                description:
+                  "Initializing comparison mode. Selected periods will be overlaid on all charts to highlight growth and trends.",
+                type: "info",
+                actionLabel: "Select Period",
+                onAction: () => closeModal(),
+              })
+            }
+            className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
             Compare Periods
           </button>
-          <button className="px-6 py-3 bg-white border border-gray-200 rounded">
+          <button
+            onClick={() =>
+              openModal({
+                title: "Analytics Alerts",
+                description:
+                  "Configure threshold alerts for key metrics. You will be notified via email or SMS when metrics deviate from expected patterns.",
+                type: "question",
+                actionLabel: "Configure Alerts",
+                onAction: () => closeModal(),
+              })
+            }
+            className="px-6 py-3 bg-white border border-gray-200 rounded hover:bg-gray-50"
+          >
             Set Up Alerts
           </button>
         </section>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }

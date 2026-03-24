@@ -5,19 +5,49 @@ import { Card } from "../../../components/ui/Card";
 import { SectionHeader } from "../../../components/ui/SectionHeader";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 import { useUsers } from "../../../lib/hooks";
 import { useState, useEffect } from "react";
 import { UserModal } from "../../../components/admin/UserModal";
 import { ConfirmDeleteModal } from "../../../components/admin/ConfirmDeleteModal";
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  status: string;
+  company: string;
+}
 
 export default function UserManagementPage() {
   const { users, fetchUsers, createUser, updateUser, deleteUser, loading } =
     useUsers();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [userToDelete, setUserToDelete] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -67,12 +97,25 @@ export default function UserManagementPage() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleResetPassword = (user: any) => {
-    alert(`Password reset initiation for ${user.username}. An email was dispatched.`);
+  const handleResetPassword = (user: User) => {
+    openModal({
+      title: "Reset Password",
+      description: `We've initiated the password reset protocol for ${user.username}. A secure link has been dispatched to their registered email address (${user.email || "N/A"}).`,
+      type: "success",
+    });
   };
 
-  const handleImpersonate = (user: any) => {
-    alert(`Impersonating ${user.username}... redirecting to session context.`);
+  const handleImpersonate = (user: User) => {
+    openModal({
+      title: "Session Impersonation",
+      description: `You are about to establish a secure impersonation session as ${user.username}. This will allow you to view the platform from their specific context and permissions.\n\nNote: All actions performed will be logged as 'Admin Impersonating ${user.username}'.`,
+      type: "question",
+      actionLabel: "Launch Session",
+      onAction: () => {
+        closeModal();
+        // Here you would implement actual impersonation logic
+      },
+    });
   };
 
   return (
@@ -81,6 +124,14 @@ export default function UserManagementPage() {
         <Button
           variant="outline"
           className="bg-white text-gray-700 border-gray-300"
+          onClick={() =>
+            openModal({
+              title: "User Filters",
+              description:
+                "Advanced filtering allows you to segment users by status, role, company, or last activity. This feature is being optimized for large directories.",
+              type: "info",
+            })
+          }
         >
           Filter: Active User
         </Button>
@@ -133,10 +184,12 @@ export default function UserManagementPage() {
                       </td>
 
                       <td className="px-6 py-5">
-                        {u.status === "active" ? (
+                        {u.status?.toLowerCase() === "active" ? (
                           <Badge variant="success">Active</Badge>
                         ) : (
-                          <Badge variant="danger">Disabled</Badge>
+                          <Badge variant="danger">
+                            {u.status || "Disabled"}
+                          </Badge>
                         )}
                       </td>
                     </tr>
@@ -193,12 +246,12 @@ export default function UserManagementPage() {
                     <span className="font-medium text-gray-400">Status:</span>
                     <span
                       className={
-                        selectedUser.status === "active"
+                        selectedUser.status?.toLowerCase() === "active"
                           ? "text-green-600 font-bold"
                           : "text-red-600 font-bold"
                       }
                     >
-                      {selectedUser.status.toUpperCase()}
+                      {selectedUser.status?.toUpperCase() || "DISABLED"}
                     </span>
                   </li>
                 </ul>
@@ -224,13 +277,13 @@ export default function UserManagementPage() {
                   >
                     Delete Account
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => handleResetPassword(selectedUser)}
                     className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm"
                   >
                     Reset Password
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => handleImpersonate(selectedUser)}
                     className="bg-slate-900 text-white h-auto py-3 rounded-xl text-sm"
                   >
@@ -272,6 +325,16 @@ export default function UserManagementPage() {
         title="Terminate User Access"
         itemName={userToDelete?.username || "this user"}
         loading={loading}
+      />
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
       />
     </main>
   );

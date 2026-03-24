@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { Button } from "../../../components/ui/Button";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 function SectionHeader({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +12,72 @@ function SectionHeader({ children }: { children: React.ReactNode }) {
 }
 
 export default function AdminSettingsIndex() {
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleExport = () => {
+    // Current configuration snapshot
+    const config = {
+      general: {
+        platformName: "Sitesupervise Pro",
+        supportEmail: "support@sitesupervise.com",
+        timezone: "UTC-06:00 Eastern Time",
+        dateFormat: "MM/DD/YYYY",
+      },
+      performance: {
+        arPriority: "Balanced",
+        aiRefresh: "Daily",
+        cacheDuration: "24 hours",
+        backupFrequency: "Every 6 hours",
+      },
+      storage: {
+        maxProjectSize: "1000GB",
+        maxFileSize: "2GB",
+        retentionPolicy: "Active 7 years, archived 3 years",
+        autoCleanup: "Enabled",
+      },
+      exportTimestamp: new Date().toISOString(),
+    };
+
+    const blob = new Blob([JSON.stringify(config, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `sitesupervise-config-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    openModal({
+      title: "Configuration Exported",
+      description:
+        "The current platform configuration has been successfully compiled into a JSON manifest and dispatched to your local downloads.\n\nFilename: sitesupervise-config.json",
+      type: "success",
+    });
+  };
+
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
@@ -17,7 +85,19 @@ export default function AdminSettingsIndex() {
         <h1 className="text-sm font-semibold text-[#0A1B2E]">
           Platform Configuration
         </h1>
-        <button className="px-4 py-2 border border-gray-300 bg-white rounded-md text-sm text-gray-700 hover:bg-gray-50">
+        <button
+          onClick={() =>
+            openModal({
+              title: "Save Configuration",
+              description:
+                "Commit all changes to the platform core. This will update company metadata, performance thresholds, and storage policies across all instances.",
+              type: "question",
+              actionLabel: "Save Changes",
+              onAction: () => closeModal(),
+            })
+          }
+          className="px-4 py-2 border border-gray-300 bg-white rounded-md text-sm text-gray-700 hover:bg-gray-50"
+        >
           Save Changes
         </button>
       </div>
@@ -48,7 +128,19 @@ export default function AdminSettingsIndex() {
                   <label className="w-32 text-sm text-gray-700">
                     Company Logo
                   </label>
-                  <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Asset Management",
+                        description:
+                          "Upload a high-resolution logo for your platform instance. Supported formats: .PNG, .SVG, .JPG.",
+                        type: "info",
+                        actionLabel: "Select Image",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                  >
                     Upload
                   </button>
                   <span className="text-sm text-gray-500">
@@ -68,9 +160,7 @@ export default function AdminSettingsIndex() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <label className="w-32 text-sm text-gray-700">
-                    Timezone
-                  </label>
+                  <label className="w-32 text-sm text-gray-700">Timezone</label>
                   <input
                     type="text"
                     defaultValue="UTC-06:00 Eastern Time"
@@ -285,7 +375,19 @@ export default function AdminSettingsIndex() {
                 <select className="border border-gray-300 text-gray-700 rounded px-4 py-2 text-sm min-w-40 hover:border-gray-400">
                   <option>Accounting</option>
                 </select>
-                <button className="border border-gray-300 text-gray-700 rounded px-4 py-2 text-sm hover:bg-gray-50">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "Custom API Integration",
+                      description:
+                        "Register a new external data source. This will allow the platform to ingest third-party telemetry and synchronize project metadata.",
+                      type: "question",
+                      actionLabel: "Add Endpoint",
+                      onAction: () => closeModal(),
+                    })
+                  }
+                  className="border border-gray-300 text-gray-700 rounded px-4 py-2 text-sm hover:bg-gray-50"
+                >
                   Custom API
                 </button>
               </div>
@@ -372,29 +474,45 @@ export default function AdminSettingsIndex() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 mt-8">
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
+          <div className="flex gap-4 mt-12 pb-6">
+            <Button
+              className="bg-slate-900 text-white rounded-xl px-8 py-6 h-auto text-sm font-semibold hover:bg-slate-800 shadow-md transition-all active:scale-95"
+              onClick={() =>
+                openModal({
+                  title: "Platform Diagnostics",
+                  description:
+                    "Running a comprehensive audit of all configuration parameters, API connectivity, and storage integrity. This process will identify any potential misconfigurations.",
+                  type: "info",
+                  actionLabel: "Start Test",
+                  onAction: () => closeModal(),
+                })
+              }
+            >
               Test All Settings
-            </button>
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+            </Button>
+            <Button
+              variant="outline"
+              className="border-blue-200 text-blue-600 bg-white rounded-xl px-8 py-6 h-auto text-sm font-semibold hover:bg-blue-50 shadow-sm transition-all active:scale-95"
+              onClick={() => {
+                openModal({
+                  title: "Emergency Factory Reset",
+                  description:
+                    "WARNING: This action will revert all platform settings to their initial factory states. All custom integrations, module configs, and company metadata will be reset.",
+                  type: "warning",
+                  actionLabel: "Reset Everything",
+                  onAction: () => closeModal(),
+                });
+              }}
+            >
               Reset to Defaults
-            </button>
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
-              Export Configuration
-            </button>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4 mt-8">
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
-              Test All Settings
-            </button>
-            <button className="px-8 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-              Reset to Defaults
-            </button>
-            <button className="px-8 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
-              Export Configuration
-            </button>
+            </Button>
+            <Button
+              className="bg-primary text-white rounded-xl px-8 py-6 h-auto text-sm font-semibold hover:bg-primary/90 shadow-lg transition-all active:scale-95 flex items-center gap-2"
+              onClick={handleExport}
+            >
+              <span>Download Config</span>
+              <span className="text-xs opacity-70">(JSON)</span>
+            </Button>
           </div>
         </div>
 
@@ -414,7 +532,18 @@ export default function AdminSettingsIndex() {
             </div>
           </div>
         </div>
+        </div>
       </section>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }

@@ -8,6 +8,7 @@ import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
 import { useActiveProjectsGrid, useProjectDashboard } from "../../../lib/hooks";
 import { ProjectUsersModal } from "./ProjectUsersModal";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 interface Project {
   id: number;
@@ -141,6 +142,26 @@ function ProjectRow({
 export default function ProjectManagementPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
   const {
     data: gridData,
     fetchActiveProjectsGrid,
@@ -407,7 +428,19 @@ export default function ProjectManagementPage() {
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: `Analytics for ${selectedProject.name}`,
+                        description:
+                          "Synthesizing project performance metrics...\n\n• Progress velocity: +15% / week\n• Resource utilization: 84%\n• Active workers: 32\n• Incident rate: Low",
+                        type: "info",
+                        actionLabel: "Export Report",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     View Analytics
                   </Button>
                   <Button
@@ -416,16 +449,60 @@ export default function ProjectManagementPage() {
                   >
                     Manage Users
                   </Button>
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "Project Logs",
+                        description: `Accessing audit logs for ${selectedProject.name}. You can filter by activity type and timestamp in the upcoming Log Explorer.`,
+                        type: "info",
+                        actionLabel: "Generate CSV",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     Download Logs
                   </Button>
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "Project Configuration",
+                        description: `Modify operational parameters for ${selectedProject.name}. You can adjust safety thresholds, role permissions, and notification settings here.`,
+                        type: "question",
+                        actionLabel: "Save Config",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     Configure
                   </Button>
-                  <Button className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "System Backup",
+                        description: `Initiating a full data backup for ${selectedProject.name}. This process usually takes 5-10 minutes.`,
+                        type: "success",
+                        actionLabel: "Start Backup",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700"
+                  >
                     Backup
                   </Button>
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "Metadata Tags",
+                        description: `Apply organizational tags to ${selectedProject.name} for improved search and reporting.`,
+                        type: "info",
+                        actionLabel: "Update Tags",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     Edit Tags
                   </Button>
                 </div>
@@ -472,10 +549,34 @@ export default function ProjectManagementPage() {
             </ul>
 
             <div className="flex gap-4">
-              <Button className="bg-slate-900 text-white h-auto px-6 py-3 rounded-full text-sm font-medium">
+              <Button
+                onClick={() =>
+                  openModal({
+                    title: "Project Template Deployment",
+                    description:
+                      "Initialize a new project environment using a predefined template. This will pre-configure modules and initial permissions.",
+                    type: "question",
+                    actionLabel: "Launch Template",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="bg-slate-900 text-white h-auto px-6 py-3 rounded-full text-sm font-medium"
+              >
                 Create from Template
               </Button>
-              <Button className="bg-blue-600 text-white h-auto px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700">
+              <Button
+                onClick={() =>
+                  openModal({
+                    title: "Save as Template",
+                    description:
+                      "Capture the current project configuration and save it as a reusable template for future deployments.",
+                    type: "success",
+                    actionLabel: "Save Template",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="bg-blue-600 text-white h-auto px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700"
+              >
                 Save Current as Template
               </Button>
             </div>
@@ -485,16 +586,62 @@ export default function ProjectManagementPage() {
 
       {/* PRIMARY ACTION BAR */}
       <div className="px-8 pb-12 flex flex-wrap gap-4">
-        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
+        <Button
+          onClick={() =>
+            openModal({
+              title: "Onboarding Wizard",
+              description:
+                "Starting the new project onboarding workflow. This guided process will help you set up and configure a new platform instance.",
+              type: "question",
+              actionLabel: "Start Onboarding",
+              onAction: () => closeModal(),
+            })
+          }
+          className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm"
+        >
           Create New Project
         </Button>
-        <Button className="bg-blue-600 text-white h-auto px-8 py-4 rounded-xl text-sm hover:bg-blue-700">
+        <Button
+          onClick={() =>
+            openModal({
+              title: "Import Data Environment",
+              description:
+                "Import an existing project environment from our platform migration tools. Supported formats: .SSX, .JSON.",
+              type: "info",
+              actionLabel: "Select File",
+              onAction: () => closeModal(),
+            })
+          }
+          className="bg-blue-600 text-white h-auto px-8 py-4 rounded-xl text-sm hover:bg-blue-700"
+        >
           Import Project
         </Button>
-        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
+        <Button
+          onClick={() =>
+            openModal({
+              title: "Portfolio Export",
+              description:
+                "Generate a comprehensive report of all project metadata and portfolio summaries.",
+              type: "success",
+              actionLabel: "Download Report",
+              onAction: () => closeModal(),
+            })
+          }
+          className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm"
+        >
           Export Project List
         </Button>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }

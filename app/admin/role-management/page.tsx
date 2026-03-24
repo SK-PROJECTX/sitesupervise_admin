@@ -4,6 +4,7 @@ import { useRoles } from "../../../lib/hooks";
 import { useState, useEffect, useCallback } from "react";
 import { RoleModal } from "../../../components/admin/RoleModal";
 import { ConfirmDeleteModal } from "../../../components/admin/ConfirmDeleteModal";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 interface Permission {
   module: string;
@@ -39,6 +40,26 @@ export default function RoleManagementPage() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [roleToDelete, setRoleToDelete] = useState<Role | null>(null);
   const [editedPermissions, setEditedPermissions] = useState<Permission[]>([]);
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
 
   const stableFetchRoles = useCallback(() => {
     fetchRoles();
@@ -65,14 +86,25 @@ export default function RoleManagementPage() {
   };
 
   const handleApplyToAll = async () => {
-    if (!selectedRole) return alert("Please select a role template first.");
+    if (!selectedRole)
+      return openModal({
+        title: "Selection Required",
+        description: "Please select a role template first.",
+        type: "warning",
+      });
     try {
       await applyRole(selectedRole.id);
-      alert(
-        `Strategic application of "${selectedRole.name}" policy initiated.`,
-      );
+      openModal({
+        title: "Policy Deployment",
+        description: `Strategic application of "${selectedRole.name}" policy initiated. This process will update permissions for all users currently assigned to this role.`,
+        type: "success",
+      });
     } catch (error) {
-      alert("Application failed. Check system logs.");
+      openModal({
+        title: "Deployment Failed",
+        description: "Application failed. Check system logs for details.",
+        type: "warning",
+      });
     }
   };
 
@@ -88,10 +120,19 @@ export default function RoleManagementPage() {
   const handleOptimize = async () => {
     try {
       await optimizeRoles();
-      alert("Permission set optimization complete.");
+      openModal({
+        title: "Optimization Complete",
+        description:
+          "Permission set optimization complete. Redundant permissions have been consolidated and security defaults applied.",
+        type: "success",
+      });
       fetchRoles();
     } catch (error) {
-      alert("Optimization failed.");
+      openModal({
+        title: "Optimization Failed",
+        description: "Optimization failed. Check system logs.",
+        type: "warning",
+      });
     }
   };
 
@@ -448,6 +489,16 @@ export default function RoleManagementPage() {
         title="Delete Security Role"
         itemName={roleToDelete?.name || "this role"}
         loading={loading}
+      />
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
       />
 
       {/* Audit Results Modal */}
