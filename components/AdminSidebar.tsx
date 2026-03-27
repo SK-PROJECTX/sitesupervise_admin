@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -19,8 +19,7 @@ import {
   Wallet,
   Headphones,
 } from "lucide-react";
-import { clearAuthTokens } from "../lib/auth";
-import { adminAuthService } from "../lib/services";
+import { clearAuthTokens, logout as authLogout } from "../lib/auth";
 import { Button } from "./ui/Button";
 
 interface SidebarChild {
@@ -96,13 +95,13 @@ const sidebarItems: SidebarItem[] = [
     icon: <Activity className="w-5 h-5" />,
     label: "SYSTEM HEALTH",
     children: [
-      { label: "Health Monitor", href: "/admin/health/monitor" },
-      { label: "Service Status", href: "/admin/health/service-status" },
+      { label: "Health Monitor", href: "/admin/system-health" },
+      { label: "Service Status", href: "/admin/system-health#service-status" },
       {
-        label: "Database Management",
-        href: "/admin/health/database-management",
+        label: "Maintainance & History",
+        href: "/admin/system-health#maintainance-history",
       },
-      { label: "Backup & Restore", href: "/admin/health/backup-restore" },
+      { label: "Backup & Restore", href: "/admin/system-health#backup-restore" },
     ],
   },
   {
@@ -140,18 +139,39 @@ export default function AdminSidebar({
   // Start with all sections expanded to match the image
   const initialExpanded = sidebarItems.map((i) => i.label);
   const [expandedItems, setExpandedItems] = useState<string[]>(initialExpanded);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
+  const [currentHash, setCurrentHash] = useState(
+    typeof window !== "undefined" ? window.location.hash : "",
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    // Initial sync for pathname changes
+    handleHashChange();
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, [pathname]);
 
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
     try {
-      await adminAuthService.logout();
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
+      await authLogout();
       clearAuthTokens();
       router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
     }
   };
 
@@ -163,21 +183,35 @@ export default function AdminSidebar({
     );
   };
 
-  const isParentActive = (item: SidebarItem) => {
-    if (item.children) {
-      return item.children.some(
-        (c) => pathname === c.href || pathname.startsWith(c.href + "/"),
-      );
-    }
+  const isItemActive = (href?: string) => {
+    if (!href) return false;
 
-    if (!item.href) return false;
+    const [targetPath, targetHash] = href.split("#");
+    const normalizedTargetHash = targetHash ? `#${targetHash}` : "";
 
     // Strict match for dashboard to avoid matching /admin/something
-    if (item.href === "/admin") {
-      return pathname === "/admin";
+    if (href === "/admin") {
+      return pathname === "/admin" && !currentHash;
     }
 
-    return pathname === item.href || pathname.startsWith(item.href + "/");
+    if (targetHash) {
+      // If href has a hash, both path and hash must match
+      return pathname === targetPath && currentHash === normalizedTargetHash;
+    }
+
+    // Default path matching
+    return (
+      pathname === targetPath ||
+      (pathname.startsWith(targetPath + "/") && targetPath !== "/admin")
+    );
+  };
+
+  const isParentActive = (item: SidebarItem) => {
+    if (item.children) {
+      return item.children.some((c) => isItemActive(c.href));
+    }
+
+    return isItemActive(item.href);
   };
 
   const handleLinkClick = () => {
@@ -231,9 +265,8 @@ export default function AdminSidebar({
           </svg>
         </Button>
       </div>
-
       {/* Main Menu */}
-      <div className="flex-1 overflow-y-auto py-4">
+      <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
         <div className="px-4">
           <div className="text-xs uppercase text-[var(--color-sidebar-text-muted)] mb-4 tracking-wider">
             Main Menu
@@ -288,9 +321,7 @@ export default function AdminSidebar({
               {item.children && expandedItems.includes(item.label) && (
                 <div className="mt-1 ml-8 space-y-1">
                   {item.children.map((child) => {
-                    const isActive =
-                      pathname === child.href ||
-                      pathname.startsWith(child.href + "/");
+                    const isActive = isItemActive(child.href);
                     return (
                       <Link
                         key={child.href}
@@ -312,7 +343,6 @@ export default function AdminSidebar({
           ))}
         </div>
       </div>
-
       {/* Footer */}
       <div className="p-4 border-t border-[var(--color-sidebar-border)]">
         <Link
@@ -326,10 +356,13 @@ export default function AdminSidebar({
         <Button
           onClick={handleLogout}
           variant="ghost"
-          className="flex items-center justify-start gap-3 px-3 py-2 text-sm h-auto rounded-lg hover:bg-[var(--color-sidebar-hover)] hover:text-white transition-colors mt-2 w-full text-left"
+          disabled={isLoggingOut}
+          className="flex items-center justify-start gap-3 px-3 py-2 text-sm h-auto rounded-lg hover:bg-[var(--color-sidebar-hover)] hover:text-white transition-colors mt-2 w-full text-left disabled:opacity-50"
         >
-          <LogOut className="w-5 h-5" />
-          <span>Logout</span>
+          <LogOut
+            className={`w-5 h-5 ${isLoggingOut ? "animate-pulse" : ""}`}
+          />
+          <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
         </Button>
       </div>
     </div>

@@ -1,63 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageHeader } from "../../../components/admin/PageHeader";
 import { Card } from "../../../components/ui/Card";
 import { SectionHeader } from "../../../components/ui/SectionHeader";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
+import { useActiveProjectsGrid, useProjectDashboard } from "../../../lib/hooks";
+import { ProjectUsersModal } from "./ProjectUsersModal";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 interface Project {
   id: number;
-  icon: string;
+  icon?: string;
   name: string;
   company: string;
   progress: number;
-  status: "good" | "risk";
+  status?: string;
+  health_status_label?: string;
 }
-
-const PROJECTS: Project[] = [
-  {
-    id: 1,
-    icon: "🏢",
-    name: "ABC Tower",
-    company: "ABC Corset",
-    progress: 33,
-    status: "good",
-  },
-  {
-    id: 2,
-    icon: "🌉",
-    name: "River Bridge",
-    company: "Slate DoT",
-    progress: 68,
-    status: "risk",
-  },
-  {
-    id: 3,
-    icon: "🛣️",
-    name: "Highway Section",
-    company: "Fed Highway",
-    progress: 85,
-    status: "risk",
-  },
-  {
-    id: 4,
-    icon: "🏛️",
-    name: "Marine Terminal",
-    company: "Port Auth",
-    progress: 45,
-    status: "good",
-  },
-  {
-    id: 5,
-    icon: "🏢",
-    name: "Office Complex",
-    company: "DevCorp",
-    progress: 72,
-    status: "good",
-  },
-];
 
 interface MetricCard {
   label: string;
@@ -65,13 +26,6 @@ interface MetricCard {
   percentage: number;
   color: "orange" | "blue" | "gray" | "green";
 }
-
-const METRICS: MetricCard[] = [
-  { label: "TOTAL PROJECTS", value: 142, percentage: 100, color: "green" },
-  { label: "ACTIVE PROJECTS", value: 47, percentage: 33, color: "orange" },
-  { label: "COMPLETED PROJECTS", value: 82, percentage: 58, color: "blue" },
-  { label: "OVERDUE PROJECTS", value: 13, percentage: 9, color: "gray" },
-];
 
 function ProgressCircle({
   percentage,
@@ -114,7 +68,9 @@ function ProgressCircle({
           transform="rotate(-90 50 50)"
         />
       </svg>
-      <span className="text-sm font-bold text-gray-700">{percentage}%</span>
+      <span className="text-sm font-bold text-gray-700">
+        {Math.round(percentage)}%
+      </span>
     </div>
   );
 }
@@ -126,13 +82,16 @@ function ProjectRow({
   project: Project;
   onRowClick: (project: Project) => void;
 }) {
+  const status = project.health_status_label || project.status || "Unknown";
+  const isGood = status.toLowerCase() === "good";
+
   return (
     <tr
       className="border-b border-gray-100 last:border-none cursor-pointer hover:bg-gray-50"
       onClick={() => onRowClick(project)}
     >
       <td className="px-6 py-5">
-        <span className="text-2xl">{project.icon}</span>
+        <span className="text-2xl">{project.icon || "🏢"}</span>
       </td>
       <td className="px-6 py-5 text-sm font-medium text-gray-900">
         {project.name}
@@ -154,7 +113,7 @@ function ProjectRow({
               cy="30"
               r="25"
               fill="none"
-              stroke={project.status === "good" ? "#1E90FF" : "#FF6B35"}
+              stroke={isGood ? "#1E90FF" : "#FF6B35"}
               strokeWidth="4"
               strokeDasharray={`${(project.progress / 100) * 157} 157`}
               strokeLinecap="round"
@@ -168,14 +127,12 @@ function ProjectRow({
       </td>
       <td className="px-6 py-5 text-sm font-medium text-gray-900">
         <Badge
-          variant={project.status === "good" ? "neutral" : "danger"}
+          variant={isGood ? "neutral" : "danger"}
           className={
-            project.status === "good"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-red-100 text-red-800"
+            isGood ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-800"
           }
         >
-          {project.status === "good" ? "Good" : "Risk"}
+          {status}
         </Badge>
       </td>
     </tr>
@@ -184,6 +141,72 @@ function ProjectRow({
 
 export default function ProjectManagementPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+  const {
+    data: gridData,
+    fetchActiveProjectsGrid,
+    loading: gridLoading,
+  } = useActiveProjectsGrid();
+
+  const {
+    stats,
+    fetchProjectDashboard,
+    loading: statsLoading,
+  } = useProjectDashboard();
+
+  useEffect(() => {
+    fetchProjectDashboard();
+    fetchActiveProjectsGrid();
+  }, []);
+
+  const metrics: MetricCard[] = [
+    {
+      label: "TOTAL PROJECTS",
+      value: stats.total_projects,
+      percentage: 100,
+      color: "green",
+    },
+    {
+      label: "ACTIVE PROJECTS",
+      value: stats.active_projects,
+      percentage: (stats.active_projects / stats.total_projects) * 100 || 0,
+      color: "orange",
+    },
+    {
+      label: "COMPLETED PROJECTS",
+      value: stats.completed_projects,
+      percentage: (stats.completed_projects / stats.total_projects) * 100 || 0,
+      color: "blue",
+    },
+    {
+      label: "AT RISK",
+      value: stats.at_risk,
+      percentage: (stats.at_risk / stats.total_projects) * 100 || 0,
+      color: "gray",
+    },
+  ];
+
+  const projects = gridData.results || [];
 
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
@@ -192,8 +215,9 @@ export default function ProjectManagementPage() {
         <Button
           variant="outline"
           className="bg-white text-gray-700 border-gray-300"
+          onClick={() => fetchActiveProjectsGrid()}
         >
-          View: All Active
+          {gridLoading ? "Refreshing..." : "View: All Active"}
         </Button>
       </PageHeader>
 
@@ -206,18 +230,18 @@ export default function ProjectManagementPage() {
 
         <div className="bg-white rounded-3xl p-0 shadow-sm mb-12 overflow-hidden border border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-200">
-            {METRICS.map((metric, idx) => (
+            {metrics.map((metric, idx) => (
               <div
                 key={idx}
                 className="p-8 flex flex-col items-center justify-center"
               >
-                <h3 className="text-xs font-bold text-[#0A1B2E] mb-8 text-center">
+                <h3 className="text-xs font-bold text-[#0A1B2E] mb-8 text-center uppercase">
                   {metric.label}
                 </h3>
                 <p className="text-5xl font-bold text-gray-900 mb-6">
-                  {metric.value}
+                  {statsLoading ? "..." : metric.value}
                 </p>
-                {metric.percentage > 0 && (
+                {!statsLoading && metric.percentage > 0 && (
                   <ProgressCircle
                     percentage={metric.percentage}
                     color={metric.color}
@@ -229,9 +253,40 @@ export default function ProjectManagementPage() {
         </div>
       </section>
 
-      {/* ACTIVE PROJECTS SECTION */}
       <section className="px-8 pb-12" id="active">
-        <SectionHeader title="ACTIVE PROJECTS GRID" className="text-sm" />
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+          <SectionHeader
+            title="ACTIVE PROJECTS GRID"
+            className="text-sm !mb-0"
+          />
+          <div className="flex flex-wrap gap-4 w-full md:w-auto">
+            <div className="relative flex-grow md:flex-grow-0">
+              <input
+                type="text"
+                placeholder="Search projects..."
+                className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                onChange={(e) => {
+                  const term = e.target.value;
+                  if (term.length >= 2 || term.length === 0) {
+                    fetchActiveProjectsGrid({ search: term });
+                  }
+                }}
+              />
+            </div>
+            <select
+              className="px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              onChange={(e) => {
+                const status = e.target.value;
+                fetchActiveProjectsGrid({ health_status: status || undefined });
+              }}
+            >
+              <option value="">All Health Statuses</option>
+              <option value="GOOD">Good</option>
+              <option value="RISK">Risk</option>
+              <option value="CRITICAL">Critical</option>
+            </select>
+          </div>
+        </div>
 
         <Card>
           <div className="border border-gray-200 rounded-xl overflow-hidden">
@@ -246,16 +301,75 @@ export default function ProjectManagementPage() {
                 </tr>
               </thead>
               <tbody className="text-gray-700">
-                {PROJECTS.map((project) => (
-                  <ProjectRow
-                    key={project.id}
-                    project={project}
-                    onRowClick={setSelectedProject}
-                  />
-                ))}
+                {gridLoading ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-10 text-center text-gray-500"
+                    >
+                      Loading projects...
+                    </td>
+                  </tr>
+                ) : projects.length > 0 ? (
+                  projects.map((project: any) => (
+                    <ProjectRow
+                      key={project.id}
+                      project={project}
+                      onRowClick={setSelectedProject}
+                    />
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-10 text-center text-gray-500"
+                    >
+                      No active projects found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {gridData.count > 0 && (
+            <div className="mt-4 flex items-center justify-between px-2">
+              <p className="text-xs text-gray-500">
+                Showing {projects.length} of {gridData.count} projects
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!gridData.previous || gridLoading}
+                  onClick={() => {
+                    if (gridData.previous) {
+                      const url = new URL(gridData.previous);
+                      const page = url.searchParams.get("page") || "1";
+                      fetchActiveProjectsGrid({ page });
+                    }
+                  }}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!gridData.next || gridLoading}
+                  onClick={() => {
+                    if (gridData.next) {
+                      const url = new URL(gridData.next);
+                      const page = url.searchParams.get("page");
+                      fetchActiveProjectsGrid({ page: page || undefined });
+                    }
+                  }}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </Card>
       </section>
 
@@ -280,13 +394,17 @@ export default function ProjectManagementPage() {
               <div>
                 <ul className="text-sm text-gray-700 space-y-2 list-disc pl-5">
                   <li>Client: {selectedProject.company}</li>
-                  <li>Value: $5.8M</li>
+                  <li>
+                    Health Status:{" "}
+                    {selectedProject.health_status_label ||
+                      selectedProject.status}
+                  </li>
+                  <li>Overall Progress: {selectedProject.progress}%</li>
+                  {/* Mock details for static parts of modal */}
                   <li>Timeline: Jan 2023 - Dec 2024</li>
                   <li>Users: 42 active</li>
                   <li>Storage: 245GB</li>
-                  <li>Last Backup: 08:00 AM Today</li>
                   <li>API calls: 12,450/day avg</li>
-                  <li>AR Score: 842 completed</li>
                 </ul>
               </div>
 
@@ -310,22 +428,81 @@ export default function ProjectManagementPage() {
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: `Analytics for ${selectedProject.name}`,
+                        description:
+                          "Synthesizing project performance metrics...\n\n• Progress velocity: +15% / week\n• Resource utilization: 84%\n• Active workers: 32\n• Incident rate: Low",
+                        type: "info",
+                        actionLabel: "Export Report",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     View Analytics
                   </Button>
-                  <Button className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
+                  <Button
+                    className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700"
+                    onClick={() => setIsUserModalOpen(true)}
+                  >
                     Manage Users
                   </Button>
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "Project Logs",
+                        description: `Accessing audit logs for ${selectedProject.name}. You can filter by activity type and timestamp in the upcoming Log Explorer.`,
+                        type: "info",
+                        actionLabel: "Generate CSV",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     Download Logs
                   </Button>
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "Project Configuration",
+                        description: `Modify operational parameters for ${selectedProject.name}. You can adjust safety thresholds, role permissions, and notification settings here.`,
+                        type: "question",
+                        actionLabel: "Save Config",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     Configure
                   </Button>
-                  <Button className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "System Backup",
+                        description: `Initiating a full data backup for ${selectedProject.name}. This process usually takes 5-10 minutes.`,
+                        type: "success",
+                        actionLabel: "Start Backup",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-blue-600 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-blue-700"
+                  >
                     Backup
                   </Button>
-                  <Button className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800">
+                  <Button
+                    onClick={() =>
+                      openModal({
+                        title: "Metadata Tags",
+                        description: `Apply organizational tags to ${selectedProject.name} for improved search and reporting.`,
+                        type: "info",
+                        actionLabel: "Update Tags",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="bg-slate-900 text-white h-auto py-3 rounded-lg text-xs font-medium hover:bg-slate-800"
+                  >
                     Edit Tags
                   </Button>
                 </div>
@@ -346,6 +523,14 @@ export default function ProjectManagementPage() {
         </div>
       )}
 
+      {selectedProject && (
+        <ProjectUsersModal
+          isOpen={isUserModalOpen}
+          onClose={() => setIsUserModalOpen(false)}
+          project={selectedProject}
+        />
+      )}
+
       {/* PROJECT TEMPLATE*/}
       <section className="px-8 pb-12" id="templates">
         <SectionHeader title="PROJECT TEMPLATE" className="text-sm" />
@@ -364,10 +549,34 @@ export default function ProjectManagementPage() {
             </ul>
 
             <div className="flex gap-4">
-              <Button className="bg-slate-900 text-white h-auto px-6 py-3 rounded-full text-sm font-medium">
+              <Button
+                onClick={() =>
+                  openModal({
+                    title: "Project Template Deployment",
+                    description:
+                      "Initialize a new project environment using a predefined template. This will pre-configure modules and initial permissions.",
+                    type: "question",
+                    actionLabel: "Launch Template",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="bg-slate-900 text-white h-auto px-6 py-3 rounded-full text-sm font-medium"
+              >
                 Create from Template
               </Button>
-              <Button className="bg-blue-600 text-white h-auto px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700">
+              <Button
+                onClick={() =>
+                  openModal({
+                    title: "Save as Template",
+                    description:
+                      "Capture the current project configuration and save it as a reusable template for future deployments.",
+                    type: "success",
+                    actionLabel: "Save Template",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="bg-blue-600 text-white h-auto px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-700"
+              >
                 Save Current as Template
               </Button>
             </div>
@@ -377,16 +586,62 @@ export default function ProjectManagementPage() {
 
       {/* PRIMARY ACTION BAR */}
       <div className="px-8 pb-12 flex flex-wrap gap-4">
-        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
+        <Button
+          onClick={() =>
+            openModal({
+              title: "Onboarding Wizard",
+              description:
+                "Starting the new project onboarding workflow. This guided process will help you set up and configure a new platform instance.",
+              type: "question",
+              actionLabel: "Start Onboarding",
+              onAction: () => closeModal(),
+            })
+          }
+          className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm"
+        >
           Create New Project
         </Button>
-        <Button className="bg-blue-600 text-white h-auto px-8 py-4 rounded-xl text-sm hover:bg-blue-700">
+        <Button
+          onClick={() =>
+            openModal({
+              title: "Import Data Environment",
+              description:
+                "Import an existing project environment from our platform migration tools. Supported formats: .SSX, .JSON.",
+              type: "info",
+              actionLabel: "Select File",
+              onAction: () => closeModal(),
+            })
+          }
+          className="bg-blue-600 text-white h-auto px-8 py-4 rounded-xl text-sm hover:bg-blue-700"
+        >
           Import Project
         </Button>
-        <Button className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm">
+        <Button
+          onClick={() =>
+            openModal({
+              title: "Portfolio Export",
+              description:
+                "Generate a comprehensive report of all project metadata and portfolio summaries.",
+              type: "success",
+              actionLabel: "Download Report",
+              onAction: () => closeModal(),
+            })
+          }
+          className="bg-slate-900 text-white h-auto px-8 py-4 rounded-xl text-sm"
+        >
           Export Project List
         </Button>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }

@@ -1,5 +1,14 @@
-export const setAuthTokens = (accessToken: string, refreshToken: string, user: any) => {
+import { adminAuthService } from "./services";
+
+export const setAuthTokens = (
+  accessToken: string,
+  refreshToken: string,
+  user: any,
+) => {
   // Store in localStorage for API calls
+  // console.log("accessToken", accessToken);
+  // console.log("refreshToken", refreshToken);
+  // console.log("user", user);
   localStorage.setItem("admin_access_token", accessToken);
   localStorage.setItem("admin_refresh_token", refreshToken);
   localStorage.setItem("admin_user", JSON.stringify(user));
@@ -13,50 +22,46 @@ export const clearAuthTokens = () => {
 };
 
 export const getStoredUser = () => {
-  if (typeof window === 'undefined') return null;
-  
+  if (typeof window === "undefined") return null;
+
   const userStr = localStorage.getItem("admin_user");
   return userStr ? JSON.parse(userStr) : null;
 };
 
 export const getStoredTokens = () => {
-  if (typeof window === 'undefined') return { accessToken: null, refreshToken: null };
-  
+  if (typeof window === "undefined")
+    return { accessToken: null, refreshToken: null };
+
   return {
-    accessToken: localStorage.getItem('admin_access_token'),
-    refreshToken: localStorage.getItem('admin_refresh_token')
+    accessToken: localStorage.getItem("admin_access_token"),
+    refreshToken: localStorage.getItem("admin_refresh_token"),
   };
 };
 
 export const isAuthenticated = () => {
-  if (typeof window === 'undefined') return false;
-  
+  if (typeof window === "undefined") return false;
+
   const token = localStorage.getItem("admin_access_token");
   const user = getStoredUser();
-  
-  return !!(token && user && user.role === 'ADMIN');
+
+  return !!(token && user && user.role === "ADMIN");
 };
 
 export const logout = async () => {
   try {
     const { refreshToken } = getStoredTokens();
-    
+
     // Call logout API if refresh token exists
     if (refreshToken) {
-      await fetch('https://sitesupervise-backend-tkyx.onrender.com/api/v1/auth/logout/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('admin_access_token')}`
-        },
-        body: JSON.stringify({ refresh_token: refreshToken })
-      });
+      await adminAuthService.logout(refreshToken);
     }
   } catch (error) {
-    console.error('Logout API call failed:', error);
+    console.error("Logout API call failed:", error);
   } finally {
     // Always clear tokens regardless of API call success
     clearAuthTokens();
-    window.location.href = '/login';
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
   }
 };

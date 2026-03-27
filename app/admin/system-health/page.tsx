@@ -1,6 +1,21 @@
 "use client";
 
 import { ToggleRight } from "lucide-react";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  ChartOptions,
+  ChartData,
+} from "chart.js";
+import { Pie } from "react-chartjs-2";
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+import { useState } from "react";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 function CircularProgress({
   percentage,
@@ -60,6 +75,61 @@ function CircularProgress({
 }
 
 export default function SystemHealthMonitorPage() {
+  const [filter, setFilter] = useState("all");
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const serviceData = {
+    all: [65, 20, 15],
+    critical: [0, 0, 100],
+    warning: [0, 100, 0],
+    region: [40, 30, 30],
+  };
+
+  const currentData =
+    serviceData[filter as keyof typeof serviceData] || serviceData.all;
+
+  const handleMaintenance = () => {
+    openModal({
+      title: "Schedule Maintenance",
+      description:
+        "Initialize a maintenance window for the selected components. This will notify all affected users and prepare the system for the scheduled updates.",
+      type: "question",
+      actionLabel: "Confirm Schedule",
+      onAction: () => {
+        closeModal();
+      },
+    });
+  };
+
+  const handleDiagnostic = () => {
+    openModal({
+      title: "Full System Diagnostic",
+      description:
+        "A deep-scan diagnostic has been initiated. This process analyzes all infrastructure layers including network latency, database query performance, and AI model health.",
+      type: "success",
+      actionLabel: "Analyze Results",
+      onAction: () => closeModal(),
+    });
+  };
   return (
     <main className="min-h-screen bg-[#EAEAEA]">
       {/* Header */}
@@ -201,58 +271,51 @@ export default function SystemHealthMonitorPage() {
         </div>
 
         {/* Service Dependency Map Section */}
-        <div className="mt-8">
+        <div id="service-status" className="mt-8">
           <h2 className="text-2xl font-bold text-[#0A1B2E] uppercase tracking-wide mb-6">
             SERVICE DEPENDENCY MAP
           </h2>
 
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-200">
             <div className="grid grid-cols-3 gap-8">
-              {/* Left: Concentric circles diagram */}
-              <div className="flex items-center justify-center col-span-1">
-                <svg
-                  width={280}
-                  height={280}
-                  viewBox="0 0 280 280"
-                  className="drop-shadow-sm"
-                >
-                  {/* Outer red ring */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={120}
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth="20"
-                    opacity="0.8"
-                  />
-                  {/* Middle green ring */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={80}
-                    fill="none"
-                    stroke="#22c55e"
-                    strokeWidth="20"
-                    opacity="0.8"
-                  />
-                  {/* Inner yellow circle (mostly filled) */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={45}
-                    fill="#eab308"
-                    opacity="0.9"
-                  />
-                  {/* Light pink overlay on green */}
-                  <circle
-                    cx={140}
-                    cy={140}
-                    r={80}
-                    fill="#fce7f3"
-                    opacity="0.3"
-                  />
-                </svg>
+              {/* Left: Professional Pie Chart */}
+              <div className="flex items-center justify-center col-span-1 h-[280px]">
+                <Pie
+                  data={
+                    {
+                      labels: ["Healthy", "Warning", "Critical"],
+                      datasets: [
+                        {
+                          data: currentData,
+                          backgroundColor: ["#22c55e", "#eab308", "#ef4444"],
+                          borderColor: ["#ffffff", "#ffffff", "#ffffff"],
+                          borderWidth: 2,
+                          hoverOffset: 4,
+                        },
+                      ],
+                    } as ChartData<"pie">
+                  }
+                  options={
+                    {
+                      plugins: {
+                        legend: {
+                          display: false,
+                        },
+                        tooltip: {
+                          enabled: true,
+                          backgroundColor: "#0A1B2E",
+                          titleFont: { size: 14, weight: "bold" },
+                          bodyFont: { size: 13 },
+                          padding: 12,
+                          cornerRadius: 8,
+                          displayColors: true,
+                        },
+                      },
+                      maintainAspectRatio: false,
+                      cutout: "0%", // Set to a value > 0 for a doughnut chart
+                    } as ChartOptions<"pie">
+                  }
+                />
               </div>
 
               {/* Right: Legend and filters */}
@@ -285,13 +348,34 @@ export default function SystemHealthMonitorPage() {
                     FILTER:
                   </div>
                   <div className="flex gap-3">
-                    <button className="px-12 py-4 bg-slate-900 text-white text-sm rounded-xl font-medium hover:bg-slate-800">
+                    <button
+                      onClick={() => setFilter("all")}
+                      className={`px-12 py-4 text-sm rounded-xl font-medium transition-all ${
+                        filter === "all"
+                          ? "bg-slate-900 text-white"
+                          : "bg-white text-slate-900 border border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
                       Show All
                     </button>
-                    <button className="px-12 py-4 bg-blue-600 text-white text-sm rounded-xl font-medium hover:bg-blue-700">
+                    <button
+                      onClick={() => setFilter("critical")}
+                      className={`px-12 py-4 text-sm rounded-xl font-medium transition-all ${
+                        filter === "critical"
+                          ? "bg-blue-600 text-white"
+                          : "bg-white text-blue-600 border border-gray-200 hover:bg-blue-50"
+                      }`}
+                    >
                       Only Critical
                     </button>
-                    <button className="px-12 py-4 bg-slate-900 text-white text-sm rounded-xl font-medium hover:bg-slate-800">
+                    <button
+                      onClick={() => setFilter("region")}
+                      className={`px-12 py-4 text-sm rounded-xl font-medium transition-all ${
+                        filter === "region"
+                          ? "bg-slate-900 text-white"
+                          : "bg-white text-slate-900 border border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
                       By Region
                     </button>
                   </div>
@@ -302,7 +386,7 @@ export default function SystemHealthMonitorPage() {
         </div>
 
         {/* Alert History & Forecast Section */}
-        <div className="mt-8">
+        <div id="maintainance-history" className="mt-8">
           <h2 className="text-2xl font-bold text-[#0A1B2E] uppercase tracking-wide mb-6">
             ALERT HISTORY & FORECAST
           </h2>
@@ -374,7 +458,7 @@ export default function SystemHealthMonitorPage() {
         </div>
 
         {/* Maintenance Controls Section */}
-        <div className="mt-8 mb-16">
+        <div id="backup-restore" className="mt-8 mb-16">
           <h2 className="text-2xl font-bold text-[#0A1B2E] uppercase tracking-wide mb-6">
             MAINTENANCE CONTROLS
           </h2>
@@ -447,10 +531,23 @@ export default function SystemHealthMonitorPage() {
 
               {/* Action Buttons */}
               <div className="flex gap-4">
-                <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+                <button
+                  onClick={handleMaintenance}
+                  className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+                >
                   Schedule Maintenance
                 </button>
-                <button className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "Maintenance Calendar",
+                      description:
+                        "Viewing the global maintenance schedule. Upcoming windows are highlighted for regional coordination.",
+                      type: "info",
+                    })
+                  }
+                  className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                >
                   View Maintenance Calendar
                 </button>
               </div>
@@ -459,18 +556,55 @@ export default function SystemHealthMonitorPage() {
 
           {/* Bottom Action Buttons */}
           <div className="mt-8 flex gap-4">
-            <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+            <button
+              onClick={handleDiagnostic}
+              className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+            >
               Run Full Diagnostic
             </button>
-            <button className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition">
+            <button
+              onClick={() =>
+                openModal({
+                  title: "System Logs",
+                  description:
+                    "Accessing real-time system logs. You can filter by service, severity, or timestamp in the upcoming Log Explorer.",
+                  type: "info",
+                  actionLabel: "Export Logs",
+                  onAction: () => closeModal(),
+                })
+              }
+              className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+            >
               View Logs
             </button>
-            <button className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition">
+            <button
+              onClick={() =>
+                openModal({
+                  title: "Open Support Ticket",
+                  description:
+                    "Your system state and recent logs will be attached to the ticket for faster resolution by our technical team.",
+                  type: "question",
+                  actionLabel: "Create Ticket",
+                  onAction: () => closeModal(),
+                })
+              }
+              className="px-8 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition"
+            >
               Open Support Ticket
             </button>
           </div>
         </div>
       </div>
+
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </main>
   );
 }

@@ -24,6 +24,7 @@ import {
   FileText,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { GeneralModal } from "../../../components/admin/GeneralModal";
 
 export default function ConferencePage() {
   const [view, setView] = useState<"schedule" | "room">("schedule");
@@ -31,6 +32,27 @@ export default function ConferencePage() {
     "chat" | "controls" | "agenda" | "actions" | null
   >(null);
   const [meetingTime, setMeetingTime] = useState("00:45:12");
+
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type?: "info" | "success" | "warning" | "question";
+    actionLabel?: string;
+    onAction?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+  });
+
+  const openModal = (config: Omit<typeof modalConfig, "isOpen">) => {
+    setModalConfig({ ...config, isOpen: true });
+  };
+
+  const closeModal = () => {
+    setModalConfig((prev) => ({ ...prev, isOpen: false }));
+  };
 
   // Mock participants
   const participants = [
@@ -67,7 +89,19 @@ export default function ConferencePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {/* Create Link */}
-            <button className="bg-white rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center gap-4 md:gap-6 hover:scale-105 transition-transform group">
+            <button
+              onClick={() =>
+                openModal({
+                  title: "Invite Participants",
+                  description:
+                    "Generating a secure, single-use access token for this conference room. You can share this link with external stakeholders or team members.",
+                  type: "success",
+                  actionLabel: "Copy Link",
+                  onAction: () => closeModal(),
+                })
+              }
+              className="bg-white rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center gap-4 md:gap-6 hover:scale-105 transition-transform group"
+            >
               <LinkIcon className="w-12 h-12 md:w-16 md:h-16 text-[#021422] group-hover:text-[#0070D4] transition-colors" />
               <span className="font-bold text-[#021422] text-base md:text-lg">
                 Create Link to Share
@@ -86,14 +120,26 @@ export default function ConferencePage() {
             </button>
 
             {/* Schedule */}
-            <Link href="/admin/meeting/schedule" className="block">
-              <button className="w-full bg-[#0070D4] rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center gap-4 md:gap-6 hover:scale-105 transition-transform">
+            <div className="block">
+              <button
+                onClick={() =>
+                  openModal({
+                    title: "Calendly Integration",
+                    description:
+                      "Redirecting to the corporate Calendly dashboard to synchronize your organizational availability and project milestones.",
+                    type: "info",
+                    actionLabel: "Open Calendly",
+                    onAction: () => closeModal(),
+                  })
+                }
+                className="w-full bg-[#0070D4] rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center gap-4 md:gap-6 hover:scale-105 transition-transform"
+              >
                 <Calendar className="w-12 h-12 md:w-16 md:h-16 text-white" />
                 <span className="font-bold text-white text-base md:text-lg">
                   Schedule in Calendly
                 </span>
               </button>
-            </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -157,7 +203,19 @@ export default function ConferencePage() {
                     <Plus size={20} className="stroke-[3]" /> Create Action Item
                   </button>
 
-                  <button className="w-full bg-[#0070D4] hover:bg-[#005bb5] text-white py-4 rounded-full font-bold flex items-center justify-center gap-3 transition-colors">
+                  <button
+                    onClick={() =>
+                      openModal({
+                        title: "Session Recording",
+                        description:
+                          "Initializing cloud recording for this conference. The meeting footage and transcript will be automatically indexed and linked to the project archive.",
+                        type: "warning",
+                        actionLabel: "Start Recording",
+                        onAction: () => closeModal(),
+                      })
+                    }
+                    className="w-full bg-[#0070D4] hover:bg-[#005bb5] text-white py-4 rounded-full font-bold flex items-center justify-center gap-3 transition-colors"
+                  >
                     <Disc size={20} className="stroke-[3]" /> Record Meeting
                   </button>
                 </div>
@@ -386,7 +444,17 @@ export default function ConferencePage() {
               </h2>
 
               <div className="flex justify-center gap-4 mb-8">
-                <button className="px-4 md:px-6 py-2 bg-[#021422] text-white border border-gray-600 rounded-lg flex items-center gap-2 text-xs md:text-sm font-bold hover:bg-gray-800">
+                <button
+                  onClick={() =>
+                    openModal({
+                      title: "Workspace Context",
+                      description:
+                        "Switching the shared view to the project main dashboard. This will allow all participants to review real-time site metrics and KPIs.",
+                      type: "info",
+                    })
+                  }
+                  className="px-4 md:px-6 py-2 bg-[#021422] text-white border border-gray-600 rounded-lg flex items-center gap-2 text-xs md:text-sm font-bold hover:bg-gray-800"
+                >
                   <Layers size={14} className="md:w-4 md:h-4" /> Dashboard
                 </button>
                 <button className="px-4 md:px-6 py-2 bg-gray-100 text-[#021422] rounded-lg flex items-center gap-2 text-xs md:text-sm font-bold">
@@ -429,6 +497,15 @@ export default function ConferencePage() {
           </div>
         </div>
       </div>
+      <GeneralModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.description}
+        type={modalConfig.type}
+        actionLabel={modalConfig.actionLabel}
+        onAction={modalConfig.onAction}
+      />
     </div>
   );
 }
