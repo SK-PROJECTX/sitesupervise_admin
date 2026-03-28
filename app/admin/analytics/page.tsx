@@ -1,3 +1,4 @@
+"use client";
 import { ArrowUpRight, Calendar } from "lucide-react";
 import PieChart from "../../../components/PieChart";
 import LineChart from "../../../components/LineChart";
