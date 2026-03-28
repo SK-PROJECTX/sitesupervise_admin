@@ -532,7 +532,6 @@ export default function AdminSettingsIndex() {
             </div>
           </div>
         </div>
-        </div>
       </section>
 
       <GeneralModal
