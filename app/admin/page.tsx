@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Bell,
   User,
@@ -10,7 +10,9 @@ import {
   Search,
   Upload,
   SlidersHorizontal,
+  ShieldCheck,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import { PageHeader } from "../../components/admin/PageHeader";
 import { Card } from "../../components/ui/Card";
 import { SectionHeader } from "../../components/ui/SectionHeader";
@@ -213,23 +215,40 @@ export default function AdminDashboardPage() {
                     {systemMetrics.map((metric) => (
                       <div
                         key={metric.label}
-                        className="flex items-center gap-4"
+                        className="flex flex-col gap-2 p-3 rounded-2xl hover:bg-gray-50/50 transition-colors group"
                       >
-                        <div className="w-44 text-sm text-gray-600">
-                          {metric.label}
+                        <div className="flex justify-between items-center px-1">
+                          <span className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                            {metric.label === "AI Model Performance" && (
+                              <ShieldCheck
+                                size={14}
+                                className="text-slate-900"
+                              />
+                            )}
+                            {metric.label}
+                          </span>
+                          <span className="text-sm font-bold text-gray-900 font-mono">
+                            {metric.value}
+                          </span>
                         </div>
 
-                        <div className="flex-1">
-                          <div className="w-full h-8 md:h-10 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full ${metric.barClass} rounded-full`}
-                              style={{ width: `${metric.progress}%` }}
-                            />
-                          </div>
-                        </div>
+                        <div className="relative h-4 bg-gray-100 rounded-full overflow-hidden shadow-inner border border-gray-200/50">
+                          {/* Shimmer/Gloss effect overlay */}
+                          <div className="absolute inset-0 z-10 pointer-events-none bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
 
-                        <div className="w-16 text-right text-sm text-gray-900">
-                          {metric.value}
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${metric.progress}%` }}
+                            transition={{
+                              duration: 1.5,
+                              ease: "circOut",
+                              delay: 0.2,
+                            }}
+                            className={`absolute top-0 left-0 h-full rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)] ${metric.barClass} relative overflow-hidden`}
+                          >
+                            {/* Inner Gloss */}
+                            <div className="absolute top-0 left-0 w-full h-[40%] bg-white/10" />
+                          </motion.div>
                         </div>
                       </div>
                     ))}
